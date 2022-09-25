@@ -1,0 +1,231 @@
+    fix mail filtering
+    change cart and getREquestUser token process use like register
+    clear token in schedule
+	use react for admin panel also use mix instead of webpack
+	review password field validate min max length trim, or just use like node react custom rule for non space char
+	like node react create custom rules like invalidEmail and so on without whitespace for password
+    search for popular jquery templates (admin) for how organize code (module pattern or object)
+    searhc how create breadcrumb dynamically on server side
+    shange sub-app name
+    change fake seeder way to fake folder inside of seeder directory and search how call custom classseeder in cli
+    search how add down method to seeder
+    change ->delete to delete first
+    instance delete method not calling events and not delete model_has_roles
+    custom 419 PAGE EXPIRED page create
+    change remember web cookie name
+    make your code more readable not fancy expressions
+    add coupon in checkout page
+    fix master layouts sidebar dynamic active link
+    change make:model command to create in models folder
+    also check if image table column disk will be populated
+    fix laravel input should return only body input not query alos
+    seeders remove without event trait on top
+    fix app client like node filemanager
+    fix nested relationships query,query for common relationships once and query for other relationships on lazy loaded relationships
+	fix all load and with by limit 1 if needed use eager limit library
+    also reduce sql query in foreach loop if you can
+    fix pagiante laravel,current page doesn't clamped to avaialbe pages therefore hasPages not working correctly
+    fix react 404 ,500 modal
+    react show success message on save
+    fix all foreign keys
+    make all comments lowercase
+    seprate every product specific table with prefix product or shop or ... like categies which later can be used with other thing like posts
+    review su order column
+    remove simple su meta or store it on json of product su
+    fix su has discount on save,disable it if no discount
+    use variations in controller and routes ,... for varible product su beacuse its simpler
+    in both client and server components and folders name scope to parent folder (in Group folder component ,instead of saying deleteGroupConfirmModal,say deleteConfirmModal)
+    test specifications react reponsive add overflow horizontal
+    make all folders in server pascal case
+    check product form resposnive
+    add empty items alert for specs,variaitons,attributes
+    search how alias relationships in load or with ... variableProductTypeAttributes
+    for variations save changes only send changed variations if possible
+    repace clien loadings with loader because it will prevent other actions 
+    search how prevent two browser client from doing actions or concurrent issue because with loader we can't prevent multiple client requests
+    in client prevent useDependecnyChangeEffect from comparing large objects
+    alert user when changing variations tab if it has unsaved changes or even for attributes and specs
+    fix product attribute naming in atttributes contorllers
+    in client useMemo and batch multiple same dependencies
+    reduce use memo in admin because it wil block other page components from rendering
+    continue client refetch variations when changing tab from attributes
+    if possible convert all jquery to react in cart page and checkout
+    may change product _visits table to morph for other things as well
+    may change foreign key pattern in app provider to something more unique because now it may be not so unique,or use short unique id and store coorespondindg column in seprarte table like db_keys
+    change stock!=0 into inStock scope and search for other scope use cases
+    make orderByPivot like _Ordered to _orderedByPivot
+    check attrs order in db
+    make all controllers as Ctrl,or because they are in contorllers folder just remove controller completly from names
+    for cateogry make two radio which says category doesn't have parent at all or show list of categories to set its parent cateoriy
+    shop most-releavnt sorting
+    specifition item  text value can use ckeditor or simple markdown editor and also value can be list  and laos use ckeditor,...
+    continue react image,save product,thumbnails
+    add proeprties value in same page as edit and create
+    control product simple and variable type based on its last category attributes and also limit select attribute if category doesn't have that attribute
+    ***** product can be simple even if its category have attributes because digikala use samething,so product first option is variable type but can switch to simple
+
+		use controller instead of ctrl
+
+
+    fix client naming for attributes
+    sync main client hooks and index with admin
+    complete product proeprties
+    complete porepties views
+    insteadof using formik for states key-value object, enahnce useState to set key value pair with immer or manually,and only use formik for validations if needed
+    for both image and thumbnails don't show preview becuase its not real size and quality in server,just get url from server and show it
+    in cart show attributes
+    replace sortable item completly with component like thumbnials
+    make thumbnails list instead of row for sort issue
+    fix move thumbnail and click remove btn
+    make pages folder into modules for shop/users,..
+    fix sorting thumnnails in mobile res
+    for product properties we must access to product last category in order to specify proeprties or search for their category properties,so fix getCategoryProperties in http client and server and put it on categories controllers
+    when selection proeprties in category make sure propery ahave at least one value selectes
+    separate categories ctrl into different controllers
+    add order to categories
+    fix product page client error
+    create a feature for route middleware groups
+    after fixing admin variations,check for query result if right su selected
+    check size of thumbnails and product images and store multiple sizes for different positions
+    product category must be last level of cateogires hierarchy,means categories may not have 3 level may have 4 or 5 level
+    *** e.g. category in level 2 may be last level in its hierarchy and products attached to this category and its parents
+
+    when category properties,attributes,brands changes,reflect on category products
+
+    only last level of cateogries hierarchy can have attributes and properties,but it also optional so hierarchy may not have any properties or attributes
+
+    simple products may have add-to-cart-btn on their shop page,like digikala
+    product must select brand based on category if category is not brand itself,it category is brand itself,all products brand will be same as category brand
+
+    test if using model instead of pivot what happen
+    create brand page like shop and search
+
+    continue slideshow images backend controllers
+    replce all delteconfirmmodal with shared
+
+	
+	
+	
+	*************************
+	add bag featre to validating
+	bag is extra vraiable for holding errors,useful for page for multiple forms to avoid conflicting error variable
+	
+	any where laravel use validate method like on request or validator object there is a validateWithBag method too to add bag
+	or withErrors method accept bag name
+
+    replace all image upload with spatie media lib
+
+    replace all count() with isEmpty or isNotEmpty
+
+    check for select sub for limit 1
+
+    fix wishlish query wrong su selected for some products
+
+
+    change http context exception context from messages to somthing else
+    fix page loader in main layout master for shop and ...
+    add search widget for shop
+    set page to 1 when changing filters,create a mechanisem for reseting query by just calling reset method or ...
+
+    check  comparable existense in ajax compare
+    complete compare
+    digikala compare products based on first compare prduct main category and other products don't affect searchable categories
+    so only first product main category comparable categories include itself are searchable
+
+    change message danger to error or ...
+
+    don't let users make orders without phone number
+    fix search page,can can be used without "q" query param using tags or ...
+
+    replace client attribute from ویژگی to خصوصیت
+	replace all client select to react-select
+    complete client main category change test variations and properties and complete attributes
+	
+	product must have category to be published
+
+    replace all if(!xxx:find())_http_abort() to findorFail and for delete and update use deleteFirstOrFail
+    make all urls map to route names
+    in server check for resources if exists because may be deleted in different tab but don't check for data passed to server because we know that regular users from browsers send controlled data
+    fix otp sms
+    seprate phone login and change into different controller and route
+    remove add comment if user added comment before
+    fix addresses form for add and edit add old value for both province and city
+    add کد‌پستی باید ۱۰ رقم و بدون خط تیره باشد. under address postal code or postal code can separated by - or is optional
+    fix api main addresses client prefix
+    hide cities api created at and updated at from exposing
+    we have two pages search and shop,the only difference is shop is for specific category and needs category as url param
+    add product edit preview support like wordpress
+    create scopeOrdered as trait if you can
+    change the way using client __dependencies__
+    coment api codes
+    change app sub-app and other to better way
+	fix named routes add main.web prefix to main and web of that app routes to prevent conflict with other apps
+    if you set custom iamge for fake products,make sure remove its file in undo fake product
+    use model repository
+    for fake records we can assign is_fake column to delete them safe
+    for product su don't use is_active,first test for query scope then if its not good solution,use is_active column
+    schedule removing auto draft products
+	search for laravel architecture and HMVC
+	learn about escaping
+    cart items if are out of stock only get removed whenever user visit cart page and show alert,however we show alert in header but not remove it until user visit cart page
+    change admin logo and replace metronic names with website dynamically with db or config files
+    structure web app like node react
+    make console command (laravel style) for creating directories
+    add arr methods as macro to laravel arr class
+    if no message passed as parameter get that from translation
+	use Conditional Classes for blade for input error has error
+	use @each for include loop
+	use @auth and @guest for rendering
+	use @push for multiple inhertance script tags
+    fix htaccess for public also find a way to remove main/admin from assets url but still exists in filesystem
+    fix htacces like digikala for folders or not found files
+    change validation result name
+    for tokens we can also add foreign key like cart token and cart id or for users
+    reduce using functions like reduce and just use regular foreach loop if possible
+    prefix routes
+    check if empty string from input needed otherwise convert all trimmed and empty string to null always
+	fix phone number with persian keyboard on android
+    like digikala add address receiver a checkbox in order to say receiver is current user and set other reciver fields disabled
+    riview models relationships
+    change engage names for liek dislike
+    notify user when delete product su carefuly becaue all orders,cart items,... get reomoed,also when changing product type
+
+
+    Maybe 
+    create wallet feature as modular as possible
+    implement product schedule publishing,use metronic edit product page component
+    own logic for auth->user because when removing user from database session exists however but we need to clear that
+    convert empty string to null if needed
+    email verified middleware instead of laravel verified middleware
+    throttle password reset and email verification mail if needed
+    implement realtime reports in admin
+    product su maxmium quantity in each order
+    comment system for both product and posts in seprate tables with like and dislike each comment (morph)
+    also only for products add rating
+    after comment verification product rating will be increased, implement this in admin
+    for rating dont use ceil or floor use round to nearest integer and when cerifing comment update in database rounded rating in rating column and avg rating in avg_ratign column
+    add pagnination for product comments
+    for submiting order user must have phone
+    rename all controllers to ctrl
+    break routes and controller into mode nested fodlers
+    group auth and non auth routes into two separate group in final application only if none of routes used in both auth and non auth
+    add login with phone also when changing phone in profile,again must validate phone
+    for google login maybe redirect to register page with filled data and new password instead of leaving user without password in account
+    add defualt address also show it in dashboard page get from storyka template
+    review validation rules messages use translation
+    implement payment method
+    colorize order status based on status
+    implement shipping cost like digikala and calcualte payment cost of checkout and new order based on shipping cost factor
+    implement `your profit from buy` like digikala سود شما از خرید in both cart and checkout if total_discount_price is exist
+    foreach order create unique order id which is numbers
+    in both cart and checkout check for reduces su stock or price changes and show alert to user like digikala
+    in post checkout also check if su stock changes or price changes in cart and flash messages and return back to checkout before creating new order
+    add cehckout items as slider with su options and ... like digikala
+    fix address choose in checkout fix appearance
+    add google login
+    in admin product edit when chnaging tabs cehck if unsaved changes and show dialog to confirm because formik values will be flushed
+    validate coupon in checout whne submiting the for mand prevent risk expired coupons or deleted coupon and show error
+    implement blog with blog categories with given models
+    trim deep except
+    has option for categories to whther or not category is brand itself,like apple category is brand too so we should't show brand widget in shop sidebar
+    replace token system with uuid if possible

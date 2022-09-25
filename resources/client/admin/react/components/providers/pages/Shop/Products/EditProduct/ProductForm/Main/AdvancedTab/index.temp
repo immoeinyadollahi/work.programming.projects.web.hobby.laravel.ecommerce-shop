@@ -1,0 +1,451 @@
+
+            {/*begin::Inventory*/}
+            <div className="card card-flush py-4">
+                {/*begin::Card header*/}
+                <div className="card-header">
+                    <div className="card-title">
+                        <h2>موجودی</h2>
+                    </div>
+                </div>
+                {/*end::Card header*/}
+                {/*begin::Card body*/}
+                <div className="card-body pt-0">
+                    {/*begin::Input group*/}
+                    <div className="mb-10 fv-row">
+                        {/*begin::Tags*/}
+                        <label className="required form-label">کد محصول</label>
+                        {/*end::Tags*/}
+                        {/*begin::Input*/}
+                        <input
+                            type="text"
+                            name="sku"
+                            className="form-control mb-2"
+                            placeholder="کد محصول را وارد کنید"
+                            defaultValue="011985001"
+                        />
+                        {/*end::Input*/}
+                        {/*begin::توضیحات*/}
+                        <div className="text-muted fs-7">
+                            کد محصول را وارد کنید
+                        </div>
+                        {/*end::توضیحات*/}
+                    </div>
+                    {/*end::Input group*/}
+                    {/*begin::Input group*/}
+                    <div className="mb-10 fv-row">
+                        {/*begin::Tags*/}
+                        <label className="required form-label">بارکد</label>
+                        {/*end::Tags*/}
+                        {/*begin::Input*/}
+                        <input
+                            type="text"
+                            name="sku"
+                            className="form-control mb-2"
+                            placeholder="شماره بارکد"
+                            defaultValue={45874521458}
+                        />
+                        {/*end::Input*/}
+                        {/*begin::توضیحات*/}
+                        <div className="text-muted fs-7">
+                            شماره بارکد را وارد کنید
+                        </div>
+                        {/*end::توضیحات*/}
+                    </div>
+                    {/*end::Input group*/}
+                    {/*begin::Input group*/}
+                    <div className="mb-10 fv-row">
+                        {/*begin::Tags*/}
+                        <label className="required form-label">تعداد</label>
+                        {/*end::Tags*/}
+                        {/*begin::Input*/}
+                        <div className="d-flex gap-3">
+                            <input
+                                type="number"
+                                name="shelf"
+                                className="form-control mb-2"
+                                placeholder="روی طبقه"
+                                defaultValue={24}
+                            />
+                            <input
+                                type="number"
+                                name="warehouse"
+                                className="form-control mb-2"
+                                placeholder="در انبار"
+                            />
+                        </div>
+                        {/*end::Input*/}
+                        {/*begin::توضیحات*/}
+                        <div className="text-muted fs-7">
+                            مقدار محصول را وارد کنید
+                        </div>
+                        {/*end::توضیحات*/}
+                    </div>
+                    {/*end::Input group*/}
+                    {/*begin::Input group*/}
+                    <div className="fv-row">
+                        {/*begin::Tags*/}
+                        <label className="form-label">
+                            همه چگونه برگشت سفارش می دهد
+                        </label>
+                        {/*end::Tags*/}
+                        {/*begin::Input*/}
+                        <div className="form-check form-check-custom form-check-solid mb-2">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                defaultValue=""
+                            />
+                            <label className="form-check-label">بله</label>
+                        </div>
+                        {/*end::Input*/}
+                        {/*begin::توضیحات*/}
+                        <div className="text-muted fs-7">
+                            به مشتریان اجازه دهید محصولاتی را خریداری کنند که
+                            موجودی آنها تمام شده است.
+                        </div>
+                        {/*end::توضیحات*/}
+                    </div>
+                    {/*end::Input group*/}
+                </div>
+                {/*end::Card header*/}
+            </div>
+            {/*end::Inventory*/}
+            {/*begin::Variations*/}
+            <div className="card card-flush py-4">
+                {/*begin::Card header*/}
+                <div className="card-header">
+                    <div className="card-title">
+                        <h2>متغیرها</h2>
+                    </div>
+                </div>
+                {/*end::Card header*/}
+                {/*begin::Card body*/}
+                <div className="card-body pt-0">
+                    {/*begin::Input group*/}
+                    <div
+                        className=""
+                        data-kt-ecommerce-catalog-add-product="auto-options"
+                    >
+                        {/*begin::Tags*/}
+                        <label className="form-label">
+                            افزودن محصول متغیرها
+                        </label>
+                        {/*end::Tags*/}
+                        {/*begin::Repeater*/}
+                        <div id="kt_ecommerce_add_product_options">
+                            {/*begin::Form group*/}
+                            <div className="form-group">
+                                <div
+                                    data-repeater-list="kt_ecommerce_add_product_options"
+                                    className="d-flex flex-column gap-3"
+                                >
+                                    <div
+                                        data-repeater-item=""
+                                        className="form-group d-flex flex-wrap gap-5"
+                                    >
+                                        {/*begin::انتخاب2*/}
+                                        <div className="w-100 w-md-200px">
+                                            <select
+                                                className="form-select"
+                                                name="product_option"
+                                                data-placeholder="یک متغییر انتخاب کنبد"
+                                                data-kt-ecommerce-catalog-add-product="product_option"
+                                            >
+                                                <option />
+                                                <option value="color">
+                                                    Color
+                                                </option>
+                                                <option value="size">
+                                                    Size
+                                                </option>
+                                                <option value="material">
+                                                    Material
+                                                </option>
+                                                <option value="style">
+                                                    Style
+                                                </option>
+                                            </select>
+                                        </div>
+                                        {/*end::انتخاب2*/}
+                                        {/*begin::Input*/}
+                                        <input
+                                            type="text"
+                                            className="form-control mw-100 w-200px"
+                                            name="product_option_value"
+                                            placeholder="متغیر"
+                                        />
+                                        {/*end::Input*/}
+                                        <button
+                                            type="button"
+                                            data-repeater-delete=""
+                                            className="btn btn-sm btn-icon btn-light-danger"
+                                        >
+                                            {/*begin::Svg Icon | path: icons/duotune/arrows/arr088.svg*/}
+                                            <span className="svg-icon svg-icon-2">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width={24}
+                                                    height={24}
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                >
+                                                    <rect
+                                                        opacity="0.5"
+                                                        x="7.05025"
+                                                        y="15.5356"
+                                                        width={12}
+                                                        height={2}
+                                                        rx={1}
+                                                        transform="rotate(-45 7.05025 15.5356)"
+                                                        fill="currentColor"
+                                                    />
+                                                    <rect
+                                                        x="8.46447"
+                                                        y="7.05029"
+                                                        width={12}
+                                                        height={2}
+                                                        rx={1}
+                                                        transform="rotate(45 8.46447 7.05029)"
+                                                        fill="currentColor"
+                                                    />
+                                                </svg>
+                                            </span>
+                                            {/*end::Svg Icon*/}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {/*end::Form group*/}
+                            {/*begin::Form group*/}
+                            <div className="form-group mt-5">
+                                <button
+                                    type="button"
+                                    data-repeater-create=""
+                                    className="btn btn-sm btn-light-primary"
+                                >
+                                    {/*begin::Svg Icon | path: icons/duotune/arrows/arr087.svg*/}
+                                    <span className="svg-icon svg-icon-2">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width={24}
+                                            height={24}
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                        >
+                                            <rect
+                                                opacity="0.5"
+                                                x={11}
+                                                y={18}
+                                                width={12}
+                                                height={2}
+                                                rx={1}
+                                                transform="rotate(-90 11 18)"
+                                                fill="currentColor"
+                                            />
+                                            <rect
+                                                x={6}
+                                                y={11}
+                                                width={12}
+                                                height={2}
+                                                rx={1}
+                                                fill="currentColor"
+                                            ></rect>
+                                        </svg>
+                                    </span>
+                                    {/*end::Svg Icon*/}افزودن متغییر
+                                </button>
+                            </div>
+                            {/*end::Form group*/}
+                        </div>
+                        {/*end::Repeater*/}
+                    </div>
+                    {/*end::Input group*/}
+                </div>
+                {/*end::Card header*/}
+            </div>
+            {/*end::Variations*/}
+            {/*begin::حمل دریایی*/}
+            <div className="card card-flush py-4">
+                {/*begin::Card header*/}
+                <div className="card-header">
+                    <div className="card-title">
+                        <h2>حمل دریایی</h2>
+                    </div>
+                </div>
+                {/*end::Card header*/}
+                {/*begin::Card body*/}
+                <div className="card-body pt-0">
+                    {/*begin::Input group*/}
+                    <div className="fv-row">
+                        {/*begin::Input*/}
+                        <div className="form-check form-check-custom form-check-solid mb-2">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="kt_ecommerce_add_product_shipping_checkbox"
+                                defaultValue={1}
+                                defaultChecked="checked"
+                            />
+                            <label className="form-check-label">
+                                این محصول فیزیکی می باشد
+                            </label>
+                        </div>
+                        {/*end::Input*/}
+                        {/*begin::توضیحات*/}
+                        <div className="text-muted fs-7">
+                            تنظیم کنید که آیا محصول یک کالای فیزیکی یا دیجیتالی
+                            است. محصولات فیزیکی ممکن است نیاز به حمل و نقل داشته
+                            باشند.
+                        </div>
+                        {/*end::توضیحات*/}
+                    </div>
+                    {/*end::Input group*/}
+                    {/*begin::حمل دریایی form*/}
+                    <div
+                        id="kt_ecommerce_add_product_shipping"
+                        className="mt-10"
+                    >
+                        {/*begin::Input group*/}
+                        <div className="mb-10 fv-row">
+                            {/*begin::Tags*/}
+                            <label className="form-label">وزن</label>
+                            {/*end::Tags*/}
+                            {/*begin::or*/}
+                            <input
+                                type="text"
+                                name="weight"
+                                className="form-control mb-2"
+                                placeholder="محصولات weight"
+                                defaultValue="4.3"
+                            />
+                            {/*end::or*/}
+                            {/*begin::توضیحات*/}
+                            <div className="text-muted fs-7">
+                                وزن محصول را بر حسب کیلوگرم (کیلوگرم) تنظیم
+                                کنید.
+                            </div>
+                            {/*end::توضیحات*/}
+                        </div>
+                        {/*end::Input group*/}
+                        {/*begin::Input group*/}
+                        <div className="fv-row">
+                            {/*begin::Tags*/}
+                            <label className="form-label">ابعاد</label>
+                            {/*end::Tags*/}
+                            {/*begin::Input*/}
+                            <div className="d-flex flex-wrap flex-sm-nowrap gap-3">
+                                <input
+                                    type="number"
+                                    name="width"
+                                    className="form-control mb-2"
+                                    placeholder="Width (w)"
+                                    defaultValue={12}
+                                />
+                                <input
+                                    type="number"
+                                    name="height"
+                                    className="form-control mb-2"
+                                    placeholder="Height (h)"
+                                    defaultValue={4}
+                                />
+                                <input
+                                    type="number"
+                                    name="length"
+                                    className="form-control mb-2"
+                                    placeholder="Lengtn (l)"
+                                    defaultValue="8.5"
+                                />
+                            </div>
+                            {/*end::Input*/}
+                            {/*begin::توضیحات*/}
+                            <div className="text-muted fs-7">
+                                ابعاد محصول را به سانتی متر (سانتی متر) وارد
+                                کنید.
+                            </div>
+                            {/*end::توضیحات*/}
+                        </div>
+                        {/*end::Input group*/}
+                    </div>
+                    {/*end::حمل دریایی form*/}
+                </div>
+                {/*end::Card header*/}
+            </div>
+            {/*end::حمل دریایی*/}
+            {/*begin::Meta options*/}
+            <div className="card card-flush py-4">
+                {/*begin::Card header*/}
+                <div className="card-header">
+                    <div className="card-title">
+                        <h2> تنظیمات متا</h2>
+                    </div>
+                </div>
+                {/*end::Card header*/}
+                {/*begin::Card body*/}
+                <div className="card-body pt-0">
+                    {/*begin::Input group*/}
+                    <div className="mb-10">
+                        {/*begin::Tags*/}
+                        <label className="form-label">برچسب متا تایتل</label>
+                        {/*end::Tags*/}
+                        {/*begin::Input*/}
+                        <input
+                            type="text"
+                            className="form-control mb-2"
+                            name="meta_title"
+                            placeholder="نام متا تگ"
+                        />
+                        {/*end::Input*/}
+                        {/*begin::توضیحات*/}
+                        <div className="text-muted fs-7">
+                            یک عنوان متا تگ تنظیم کنید. توصیه می شود کلمات کلیدی
+                            ساده و دقیق باشند.
+                        </div>
+                        {/*end::توضیحات*/}
+                    </div>
+                    {/*end::Input group*/}
+                    {/*begin::Input group*/}
+                    <div className="mb-10">
+                        {/*begin::Tags*/}
+                        <label className="form-label">توضیحات متا تگ</label>
+                        {/*end::Tags*/}
+                        {/*begin::or*/}
+                        <div
+                            id="kt_ecommerce_add_product_meta_description"
+                            name="kt_ecommerce_add_product_meta_description"
+                            className="min-h-100px mb-2"
+                        ></div>
+                        {/*end::or*/}
+                        {/*begin::توضیحات*/}
+                        <div className="text-muted fs-7">
+                            برای افزایش رتبه سئو، توضیحات متا تگ را برای محصول
+                            تنظیم کنید.
+                        </div>
+                        {/*end::توضیحات*/}
+                    </div>
+                    {/*end::Input group*/}
+                    {/*begin::Input group*/}
+                    <div>
+                        {/*begin::Tags*/}
+                        <label className="form-label">کلمات کلیدی</label>
+                        {/*end::Tags*/}
+                        {/*begin::or*/}
+                        <input
+                            id="kt_ecommerce_add_product_meta_keywords"
+                            name="kt_ecommerce_add_product_meta_keywords"
+                            className="form-control mb-2"
+                        />
+                        {/*end::or*/}
+                        {/*begin::توضیحات*/}
+                        <div className="text-muted fs-7">
+                            لیستی از کلمات کلیدی که محصول به آنها مرتبط است
+                            تنظیم کنید. شهریور کلمات کلیدی را با اضافه کردن کاما
+                            مرتب کنید
+                            <code>,</code>between each keyword.
+                        </div>
+                        {/*end::توضیحات*/}
+                    </div>
+                    {/*end::Input group*/}
+                </div>
+                {/*end::Card header*/}
+            </div>
+            {/*end::Meta options*/}

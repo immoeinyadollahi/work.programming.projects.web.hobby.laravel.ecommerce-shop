@@ -1,0 +1,10 @@
+@font-face {
+    font-family: "primary-font";
+    src: url("/public/main/fonts/dubai-400.eot");
+    src: url("/public/main/fonts/dubai-400.eot?#iefix")
+            format("embedded-opentype"),
+        url("/public/main/fonts/dubai-400.woff2") format("woff2"),
+        url("/public/main/fonts/dubai-400.woff") format("woff"),
+        url("/public/main/fonts/dubai-400.ttf") format("truetype");
+    font-weight: 400;
+}

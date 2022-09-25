@@ -1,0 +1,10 @@
+    learn about gaurds
+    review how laravel works providers and so on
+    test isClean isDirty wasChanges getOriginal to learn how it works
+    mass assignment for fill new Model update and create , forceFill ignore mass assignment also field->test=2; 
+    learn storage disks
+    learn about container and binding
+    learn about logging
+    review eloquent has one of many ...
+    learn about symlinks
+

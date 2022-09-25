@@ -1,0 +1,6 @@
+routes file can use multiple controllers and its not neccessary each route file points to one controller file because names are using for grouping
+for validation field can be depend to another field and show error (because we should prevent user from entering invalid data) but we shouldn't add error if target field is invalid like `target field must be valid first` or is optional (not required).we know that user can't proceed and must clear all errors,so we only check if target or dependednt field is exists
+only if dependency field doesn't have any error
+this is true only if dependency field is optional not required
+
+when get api or ajax request don't validate all inputs and params and database existence of record,you can use request key if neccessary

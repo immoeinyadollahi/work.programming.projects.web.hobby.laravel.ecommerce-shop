@@ -1,0 +1,47 @@
+    Joins
+        use ON for only joining data and use WHERE for filtering data (https://dataschool.com/how-to-teach-people-sql/difference-between-where-and-on-in-sql/        https://stackoverflow.com/questions/354070/sql-join-where-clause-vs-on-clause)
+        however both the ON and WHERE clause can be used to filter data in a query
+        ********** use ON for only joining if join type is not inner join,otherwise ON can be used for filtering as well,so use ON for filtering if join type is inner join
+
+        With an INNER JOIN, the clauses are effectively equivalent. However, just because they are functionally the same, in that they produce the same results, does not mean the two kinds of clauses have the same semantic meaning.
+        
+        
+        .Does not matter for inner joins
+
+        .Matters for outer joins (left,right)
+
+         a. WHERE clause - is After joining. Records will be filtered after join has taken place.
+
+         b. ON clause -is Before joining. Records (from right table) will be filtered before joining. This may end up as null in the result (since OUTER join).
+
+
+        for all joins use ON for joining
+        for inner join also use ON for filtering (its has better performance when new joins added further)
+        for outer joins use WHERE for filtering
+
+
+        both joining and filtering return same result for inner join if placed in either ON or WHERE but use joining in WHERE may impact performance because in multiple joins rows gets very large
+        so for inner join use ON for joining and use either ON or WHERE for filtering
+        
+    Constraint Names
+    names must be unique between all columns within the database,no matter which type of key specified
+
+    Query Table Names & Aliases
+    each individual query `from` table name/alias and joins table name/alias must be unique
+    however `select` columns can be same as table names/alises but result is unexpected
+
+    From & Joins
+    both `from` and joins accept table name or subquery
+    for table name it will get all record from table
+    for subquery,only selected record will be returned
+
+    Select
+        not everything in select is column
+
+    Query Clauses Execution Order
+        Tips
+            1. selects (subquery or columns,...) happend after where clause (aggregate selects happen after group by if exist in query but regular select happend directly after where clause)
+            2. where happend after all joins
+            3. if there is no groupby i guess aggregate selects happen directly after where clause like other selects because one implicit group will be created and aggregation happend on that group after group creation
+            4. i nsome website they say select happend after groupby and having but select happend after where clause
+    

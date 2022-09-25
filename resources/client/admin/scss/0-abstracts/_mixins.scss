@@ -1,0 +1,101 @@
+// Media Queries
+@mixin media($size, $dir) {
+    $breakpoint: false;
+    @if ($size == xs) {
+        $breakpoint: $xs-breakpoint;
+    } @else if($size == sm) {
+        $breakpoint: $sm-breakpoint;
+    } @else if($size == md) {
+        $breakpoint: $md-breakpoint;
+    } @else if($size == lg) {
+        $breakpoint: $lg-breakpoint;
+    } @else if($size == xl) {
+        $breakpoint: $xl-breakpoint;
+    } @else if($size == xxl) {
+        $breakpoint: $xxl-breakpoint;
+    }
+    @if ($dir == max) {
+        $breakpoint: $breakpoint - 0.02;
+    }
+    @media (#{$dir}-width: $breakpoint) {
+        @content;
+    }
+}
+// Shapes
+@mixin triangle($direction, $color: $dark, $size: 5px) {
+    content: "";
+    @if $direction==top {
+        $direction: bottom;
+    } @else if $direction==bottom {
+        $direction: top;
+    } @else if $direction==left {
+        $direction: right;
+    } @else if $direction==right {
+        $direction: left;
+    }
+    @if $direction == top or $direction == bottom {
+        border-left: $size solid transparent;
+        border-right: $size solid transparent;
+    } @else if $direction == right or $direction == left {
+        border-bottom: $size solid transparent;
+        border-top: $size solid transparent;
+    }
+
+    border-#{$direction}: $size solid $color;
+}
+// visiblility
+@mixin invisible {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+@mixin visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: initial;
+}
+// Positions
+@mixin pos-center($dir, $extra: "") {
+    @if $dir==y {
+        top: 50%;
+        transform: translateY(-50%) #{$extra};
+    } @else if $dir==x {
+        left: 50%;
+        transform: translateX(-50%) #{$extra};
+    } @else if $dir==xy {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) #{$extra};
+    }
+}
+@mixin pos-inset($values...) {
+    @if length($values) == 1 {
+        top: nth($values, 1);
+        bottom: nth($values, 1);
+        left: nth($values, 1);
+        right: nth($values, 1);
+    } @else if length($values) == 2 {
+        top: nth($values, 1);
+        bottom: nth($values, 1);
+        left: nth($values, 2);
+        right: nth($values, 2);
+    } @else if length($values) == 3 {
+        top: nth($values, 1);
+        bottom: nth($values, 3);
+        left: nth($values, 2);
+        right: nth($values, 2);
+    } @else if length($values) == 4 {
+        top: nth($values, 1);
+        bottom: nth($values, 3);
+        left: nth($values, 4);
+        right: nth($values, 2);
+    } @else {
+        @error "out of range arguments count";
+    }
+}
+// Vendor Prefixes
+@mixin with-vendor-prefix($name, $value) {
+    @each $vendor in ("-webkit-", "-moz-", "-ms-", "-o-", "") {
+        #{$vendor}#{$name}: #{$value};
+    }
+}

@@ -1,0 +1,6 @@
+Immer
+    think of immer like nested shallow copy ({...originalData,...newData}) means unchanged nested data keep their original reference
+                  
+React
+    react compares dependencies with shallow comparison, means objects compared by their references not properties and values
+                        

@@ -1,0 +1,6 @@
+controller names must be meaningful
+controller or routes or views folders and files name are just for grouping not prefix urls or ...
+don't use show,edit,store,create and ... because for special routes we need more readable name so its better to name all of controller methods like them and not different name style for some of them
+show,edit,store,create used for crud operations not specific actions
+
+    name class files in PascalCase and non-class files in lower-case (dashed)

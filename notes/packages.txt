@@ -1,0 +1,15 @@
+    Spatie Permissions
+        Relations
+        1. model has permissions (direct permission)
+        2. model has roles
+        3. role has permissions (permission via role)
+
+        User
+        user may have permissions directly called direct permissions or has permissions via roles or both (exclude duplicates)
+        e.g. user has admin role,admin can edit posts or a user may not have admin role but can edit posts because hase direct permission
+
+        https://spatie.be/docs/laravel-permission/v5/best-practices/roles-vs-permissions
+
+        for simplicity we just use roles for users not permissions
+        e.g. users have roles which enable users to do specific actions
+             

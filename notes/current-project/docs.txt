@@ -1,0 +1,17 @@
+`_` in config means our own application config
+ensure login valiadtion is valid search for other websites for that to know is it correct we check in database for email before validating all fields or not
+productg can have only 2 or 3 categories by 3 cats is not neccessary like digikala 3 is max
+download app doesn't have any sub application
+
+    Application
+            1. main routes or main controller are misc
+
+
+    Ecommerce
+            1.su can be either plural or singular word
+
+            2. all orderable resources only use save changes for saving ordering state not saving modified data
+
+            Variable Product Attributes
+            1. in some places attribute may be refer to general product attributes like color,size,... or pivot table for variable product and attributes
+

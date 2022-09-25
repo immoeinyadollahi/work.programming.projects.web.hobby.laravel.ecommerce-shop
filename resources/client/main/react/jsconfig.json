@@ -1,0 +1,42 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "module": "ES6",
+        "moduleResolution": "Node",
+        "paths": {
+            "$hooks/*": [
+                "./hooks/*"
+            ],
+            "$services/*": [
+                "./services/*"
+            ],
+            "$slices/*": [
+                "./slices/*"
+            ],
+            "$template/*": [
+                "./template/*"
+            ],
+            "$utilities/*": [
+                "./utilities/*"
+            ],
+            "$validations/*": [
+                "./validations/*"
+            ],
+            "$config/*": [
+                "./config/*"
+            ],
+            "$contexts/*": [
+                "./contexts/*"
+            ],
+            "$HOC/*": [
+                "./HOC/*"
+            ],
+            "$http/*": [
+                "./http/*"
+            ],
+            "$components/*": [
+                "./components/*"
+            ],
+        },
+    }
+}

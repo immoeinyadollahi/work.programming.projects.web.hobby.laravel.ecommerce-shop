@@ -1,0 +1,17 @@
+we have only 3 ways to check if variable (variables defined by $,array properties,object properties) exists or not without throwing error
+1. null coalescing operator
+2. isset
+3. empty
+
+using anything else such as functions throw error which say undefined variable 
+
+
+
+
+
+
+empty
+return false if variable exists and is not a falsy value
+return true if variable doesn't exist or is a falsy value
+
+its like a combination of isset and boolean

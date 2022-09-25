@@ -1,0 +1,12 @@
+Payment Gateways
+    Process
+        1. purchase (payment request)
+        2. pay (redirect to payment gateway page)
+    Gateways
+        1. Zarinpal
+            callback Status query param can be ignored and is unnecessary because we check for status code of transaction in verify request anyway so OK/NOK query params are useless
+
+--------------------------
+Tokens
+    instead of using long jwt or random string tokens and also use issue_id and store them in database,we can use only uuid and store it in database along with expire date and ... just like regular jwt or random string tokens
+--------------------------

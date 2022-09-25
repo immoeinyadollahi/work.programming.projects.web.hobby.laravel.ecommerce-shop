@@ -1,0 +1,219 @@
+// Abstracts
+@import "0-abstracts/variables";
+@import "0-abstracts/mixins";
+@import "0-abstracts/utilities";
+
+.justify-content-evenly {
+  justify-content: space-evenly;
+}
+// Bootstrap
+label.required {
+  display: flex;
+  &::after {
+    content: "*";
+    display: block;
+    margin-right: 5px;
+    color: #f1416c;
+    font-weight: 700;
+    font-size: 13px;
+  }
+}
+// Product Specs
+.spec__section {
+  &[data-show-more] {
+    display: none;
+  }
+  .spec__section-title {
+    display: flex;
+    align-items: center;
+    &::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      background-color: $dark;
+      border-radius: 50%;
+      margin-left: 8px;
+      display: block;
+    }
+  }
+  .spec__row:first-of-type {
+    border-top: none;
+  }
+}
+// Product Attributes
+.attributes-color-item {
+  display: flex;
+  align-items: center;
+  &:not(:last-child) {
+    margin-left: 10px;
+  }
+  .color-item-input {
+    display: none;
+  }
+  .color-item-input:checked + .color-item-label {
+    border-color: rgb(61, 130, 173);
+  }
+  .color-item-label {
+    cursor: pointer;
+    border: 3px solid rgb(226, 226, 226);
+    width: 25px;
+    height: 25px;
+    transition: 0.1s;
+    border-radius: 50%;
+  }
+}
+.attributes-size-item {
+  &:not(:last-child) {
+    margin-left: 10px;
+  }
+  .size-item-input {
+    display: none;
+  }
+  .size-item-input:checked + .size-item-label {
+    background-color: rgb(252, 224, 67);
+  }
+  .size-item-label {
+    cursor: pointer;
+    border: 3px solid rgb(226, 226, 226);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: 0.2s;
+  }
+}
+.color-attribute-style {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+.size-attribute-style {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  border: 3px solid rgb(226, 226, 226);
+}
+.product__option {
+  margin: 0 !important;
+}
+// Compare Search
+.compare-search-wrap {
+  .search-result {
+    position: absolute;
+    top: calc(100% + 10px);
+    border: 1px solid $light;
+    padding: 20px;
+    display: none;
+    background-color: white;
+    width: 100%;
+    max-height: 400px;
+  }
+}
+// Cart
+.cart-table__column {
+  text-align: center;
+}
+// Users/Addresses
+.address-list-item {
+  + .address-list-item {
+    margin-top: 15px;
+  }
+  .dropdown {
+    .dropdown-toggle {
+      &::after {
+        display: none;
+      }
+      display: flex;
+      cursor: pointer;
+    }
+    .dropdown-item {
+      text-align: right;
+      user-select: none;
+      &:active {
+        background-color: #f8f9fa;
+      }
+    }
+  }
+}
+// Users/Orders
+.order-transactions-collapse-btn {
+  &:not(.collapsed) {
+    span {
+      transform: scaleY(-1);
+    }
+  }
+}
+.order-transaction {
+  font-size: 14px;
+  padding: 15px;
+  + .order-transaction {
+    border-top: 1px solid $light;
+  }
+  > div {
+    + div {
+      margin-top: 5px;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+// Checkout
+.address-radio-wrap {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  input {
+    display: none;
+    &:checked + label {
+      border-color: rgb(7, 185, 245);
+      &::after {
+        display: block;
+      }
+    }
+  }
+  label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    border: 2px solid black;
+    &::after {
+      content: "";
+      display: none;
+      width: 7px;
+      height: 7px;
+      background-color: rgb(7, 185, 245);
+      border-radius: 50%;
+    }
+  }
+}
+// Wishlist
+.wishlist__column {
+  text-align: center !important;
+}
+// Layout
+.dropcart__item_attributes {
+  padding: 0;
+  margin-bottom: 8px;
+}
+// Footer
+.footer-newsletter__social-link--whatsapp {
+  background-color: rgb(92, 211, 92);
+}
+.footer-newsletter__social-link--telegram {
+  background-color: lightskyblue;
+}
+// Shared
+.product-card__size-placeholder {
+  height: 19.5px;
+}

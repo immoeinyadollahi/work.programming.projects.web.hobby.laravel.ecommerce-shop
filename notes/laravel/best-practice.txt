@@ -1,0 +1,12 @@
+use laravel built-in pagination for web based only pagination (bootstrap pagination without react) and use custom paginate method for api and react requests
+
+
+Don't
+    don't use attempt for auth because it doesn't tell use what credential field was in valid after attempt
+    don't use auth middleware because in ajax app it will redirect instead of json and in api it returns built in message
+    don't use email:exists rule for login because it will not return user or set application user so we should query again
+    don't store your custom config inside on laravel config files because you can't use helpers there, so you should set config in service providers
+
+    Client
+          don't use IOC in client because its time consuming and even if you want to use in big project, customer probably needs source code or it can be done in react quickly.
+          use controllers in client but don't be clean just query multiple times and do it as fast as possible

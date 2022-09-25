@@ -1,0 +1,41 @@
+Shop
+    Products
+            1. instead of creating product default image each time we can just remove image and when showing to user, check if product has image and if not, show placholder
+            2. if products su warranties are selectable, we should make them like other options (color,size) otherwise they can belongs to every su as 1:1 relationship
+               if we want to choose 1:1 relationship for warranties,we can either create warranties as non-option table or using existing warranties options table
+               
+               ** if warranties are selectable for variable products,simple type products su must have relation with warranties in their meta table
+               
+               in this project we use 1:1 relation for warranties and products su   
+
+               ** for variable product su option we can use morph to tables like colors,sizes,... (each on has different table) and store usefull query params in current table to optimize queries
+                  or like this project make them one table and add is_custom column to table
+
+            3. like digikala in shop only lowest price variation will show up,even if other variations match with filters
+               except price filter which only match lowest price variation
+
+               price filter only matches lowest price product variation
+               or price filter only filter based on lowest price variation
+               or price filter only look for lowest price variation (even if there are matches with other prices) and compare its prices with min and max price
+
+               ****************** assumption ************* digikala show products not based on lowest price variation,but also look for higher stock values
+               so i guess it look for lowest price (final price) variation and if there are multiple ones, find higher stock value
+               and if both are equal between multiple variations, because final result which will be shown to end user doesn't have any difference, just pick one of them
+
+               for attributes we say if min price variation has any sibling variation (includes itself) which has given attributes,if any filter current min price variation even if sibling variaitons don't match with price
+
+            4. instead of products we can query for products su directly
+
+            5. if there is no price filter and only_available filter, out-of-stock su will be fetched as well
+
+               but in digikala if min price filter is set to zero or not set at all and no only_available filter applied, out-of-stock su will be fetched as well
+            
+            6. if min price su for product is out-of-stock su but if there are some higher price and in-stock su, we first should filter in-stock su and choose min price su from them
+               but for product that doesn't have any in-stock su at all,just pick one
+
+
+            Design Tips
+                    1.for boost queries store visits,sales,rating,... in product as well as separate table for analytics
+
+    Categories
+        categories products either are simple type or variable type,can't have both types in one categories

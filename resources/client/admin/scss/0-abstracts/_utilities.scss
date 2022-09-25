@@ -1,0 +1,112 @@
+// Background & Text Colors
+@each $color, $value in $colors {
+  .c-bg-#{"" + $color} {
+    background-color: $value;
+  }
+  .c-txt-#{"" + $color} {
+    color: $value;
+  }
+}
+
+// Font Size
+.c-txt-xxs {
+  font-size: 0.75rem !important;
+}
+.c-txt-xs {
+  font-size: 0.875rem !important;
+}
+.c-txt-sm {
+  font-size: 0.938rem !important;
+}
+.c-txt-md {
+  font-size: 1.063rem !important;
+}
+// Text Align
+.c-txt-justify {
+  text-align: justify;
+}
+// Text Word
+.c-text-break {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+// Object Fit
+.c-object-cover {
+  object-fit: cover;
+}
+.c-object-contain {
+  object-fit: contain;
+}
+// Border
+.c-border-dashed {
+  border-style: dashed;
+}
+// Positions
+.c-pos-center-y {
+  @include pos-center(y);
+}
+.c-pos-center-x {
+  @include pos-center(x);
+}
+.c-pos-center-xy {
+  @include pos-center(xy);
+}
+// Line Height
+.c-line-height-1 {
+  line-height: 1;
+}
+.c-line-height-2 {
+  line-height: 2;
+}
+// Height & Width
+@each $height in $percent-units {
+  .c-h-#{$height} {
+    height: #{$height + "%"};
+  }
+}
+@each $width in $percent-units {
+  .c-w-#{$width} {
+    width: #{$width + "%"};
+  }
+}
+.c-w-fit {
+  width: fit-content;
+}
+.c-h-fit {
+  height: fit-content;
+}
+// Overflow
+.c-locked-x {
+  overflow-x: hidden;
+}
+.c-locked-y {
+  overflow-y: hidden;
+}
+// Cursor
+.c-cursor-pointer {
+  cursor: pointer;
+}
+.c-cursor-default {
+  cursor: default;
+}
+// Hover Text & Background Colors
+@include media(lg, min) {
+  @each $color, $value in $colors {
+    .c-txt-hover-#{"" + $color} {
+      &:hover {
+        color: $value;
+      }
+    }
+    .c-bg-hover-#{"" + $color} {
+      &:hover {
+        background-color: $value;
+      }
+    }
+  }
+}
+// Z-Index
+@each $index in $z-index-units {
+  .c-z-index-#{$index} {
+    z-index: $index;
+  }
+}

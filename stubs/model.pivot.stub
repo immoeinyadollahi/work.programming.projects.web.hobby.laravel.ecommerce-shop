@@ -1,0 +1,9 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Classes\Base\Database\Pivot;
+
+class {{ class }} extends Pivot
+{
+}

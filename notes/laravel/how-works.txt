@@ -1,0 +1,356 @@
+Architecture
+        Request Lifecycle
+            
+        ----
+        Kernel
+
+    --------------------------
+
+    Auth
+    auth->attempt doesn't validate input 
+    auth->attempt (retrieves user by provided credentials (inputs) (it only uses ->where(field,value) equality match) with optional query builder callback to change query if we want)
+    then like our login controller if retrieved user exists, match its password then use auth()->login() and if not exists or password dosn't match return false without any credentials errors
+
+    Ways to do login process 
+    1. auth->attempt (see above)        // not recommended because we don't know about errors
+    2. manually match credentials and then use auth->login
+
+
+    auth->login (puts user into session and application and set remember token optionally)
+
+    with combination of form request and attempt we can also validate and login user
+
+    --------------------------
+
+    validation
+
+    ways to do validation on request input
+    1. via request->validate (validates with request inputs) (regular request not form request)
+    2. via form request (runs before controller also it validates with request input and has other features)
+    3. manually with validator->make method
+
+    ValidationException goes to exceptionHandler laravel default exception handling flash all request input and also flash exception errors and redirection to current router with GET method
+    just like redirect(req->url)->withErrors($ex->validator)->withInput()
+
+    --------------------------
+
+    Validator
+    if we call messages or errors on validator if schema not validated it will validate first then return result otherwise returns previous result
+    but call to validate/passes/fails method runs validation each time and store new result or overwrite previous result
+    
+    --------------------------
+
+    Validation Rules
+
+    ** assumption **
+    if field exists, all other rules will be applied even if one of them failed at beginning but only first error will be reported
+    so if you have closure based rule,its better to use either `after` callback and check if there is no error on specific field or use validator parameter in validation method to check if field has any error at this time or not
+    simply put if field exists,laravel perform all rules and store all messages in errors messages bag
+
+
+    laravel required rule method conditions
+    public function validateRequired($attribute, $value)
+    {
+        if (is_null($value)) {
+            return false;
+        } elseif (is_string($value) && trim($value) === '') {
+            return false;
+        } elseif (is_countable($value) && count($value) < 1) {
+            return false;
+        } elseif ($value instanceof File) {
+            return (string) $value->getPath() !== '';
+        }
+
+        return true;
+    }
+
+    rules
+    min is same as gte and max is same as lte
+
+    --------------------------
+
+    request flash input
+
+    to flash old input we can use $req->flash/flashOnly/flashExcept or using withInput/onlyInput/exceptInput on response
+
+    --------------------------
+
+    throttle جلو را گرفتن
+	delay before retrying
+
+    throttling works with recent action datetime and compare it with current datetime and if its greater than specific seconds value action can be performed
+    specify wait seconds before retrying
+
+    e.g.
+    for forget password or other email related actions we can use throttling and create separate table or just tokens table to store created_at column
+    for request throttling we can store recent request date in session and compare its time to current request (rate limiting)
+
+    --------------------------
+
+    confirm password
+    password confirm middleware differs from confirm password in register,this middleware just ensure password confirmed recently
+
+    --------------------------
+
+    back() and url->previous()
+
+    back internally use url->previous() to redirect to previous location
+    url->previous() first checks for headers referer if it doesn't exists,it will get previous url from session _previous.url
+
+    --------------------------
+
+    exception handling
+
+    process is in C:\Users\moyap\Desktop\source code images\laravel\exception handling
+    global exception handler call report or render method from exceptionHandler, if we override those method in our handler none of renderable and reportable callbacks get called and we should handle by our selves unless call parent::render or report
+    report function call report method from exceptionHandler directly and request will continue normally
+
+    --------------------------
+
+    response
+    response finally must send() to browser whether from kernel->handle()->send or from exception handler returned response
+
+    --------------------------
+
+    forward static call
+    in most of laravel components you can call static methods that don't exist in class like Mail::to() but laravel use Mail::mailer(default driver that is configured in config files)->to() internally and repeat this pattern in most components
+
+    --------------------------
+
+    ways to override paths helpers depend on how those path helpers resolve value
+    use ->bind or ->instance on app and change binding value
+    override app xxxxPath property e.g. app->databasePath = xxxxx
+    in our custom app override specific path method
+
+    --------------------------
+
+    laravel disks,guards,mailers,... are just set of config that have drivers (transport for mailers,...) which they also accept separate configuration below of them 
+    e.g. we have authentication guards which are just set of configuration and they have drivers which can be built in to the laravel or custom,they accept provider as extra config
+    which they are also separate configuration that also have drivers
+    so pattern is set of configurations with drivers(transport for mailers,...) that accept extra config below them and config options may be another set of configuration provided by us
+
+    most of laravel services when accessing there method we are not forced to specify config (disk,guard,mailer,...)
+    they use default one in each configuration instead of throwing error but if we want to specify our config (disk,guard,...) we can use its method
+
+    --------------------------
+
+    Cache
+    ttl ->  The Time To Live (TTL) of an item is the amount of time between when that item is stored, and it is considered stale. The TTL is normally defined by an integer representing time in seconds, or a DateInterval object
+            simply means expiration or max age
+
+    expired caches will be removed as soon as access that cache key by methods like has,get,...
+    accessing each key in store doesn't check for other keys expiration 
+
+    *** for cache env CACHE_DRIVER is actually cache store not driver
+    --------------------------
+
+    Authentication
+
+    laravel has different drivers such as SessionGuard,TokenGuard,RequestGuard but they are guard driver not guard because guards are just set of config provided by us
+    we can have custom providers also custom drivers and definitely custom guard   
+    we can have custom driver but with built in provider or vice versa custom provider with built in driver
+    driver provider option is actually user_provider so all provider must implement user provider contract
+	so guards that contains driver and provider defines how user should authenticate (or resolve from request) (driver job) and retrieved (provider job) in each request 
+    --------------------------
+
+    Middlewares
+    we have before and after middleware which uses stack data structure method,if middleware call next callback,application give call next middleware until returning response (from middleware or controller),then from last middleware $next($request) get finished and response goes down to stack until all middlewares return response and may alter response object
+
+    --------------------------
+
+    Database Env
+    we can use multiple env for database like development or production by naming connections in database config,so connection name can be anything
+
+    --------------------------
+
+    fresh app
+    in commands like route:cache fresh application will be booted hence providers booted twice,make sure check function existence before declaring them
+
+    --------------------------
+
+    Database Query
+    all database select query return collection which is like array but with extra methods and properties
+    if laravel uses pdo fetchAll method then it will use it for all queries and not ever use fetchObject and other methods for some queries (one-to-one query or limit 1 query)
+    so all select queries use fetchAll which return array and laravel use that array and create collection from it
+    get method change query to select query
+    database querybuilder get method returns base collection but eloquent get method returns eloquent collection which extends base collection also with extra methods
+    so even set limit to one in query, query still return collection but for this type of query we can use first method to get first result as object
+
+    for delete/update/select query we can use delete/update/get method in end of query (these methods terminate query and return final result)
+    these are also alternative way for update and delete  -> Model::destroy() for delete , instance->xxx=2;instance->save() for update
+
+    --------------------------
+    Query Buidler JOIN
+    laravel create separate builder for each join and in result get all wheres from that builder and merge it to main query join on clause
+    because WHERE and ON syntax is equal, they can be used interchangeably
+    --------------------------
+    Query Buidler WHERE
+    where methods compares a column with literal sql value but whereColumn compares a column with another column in query
+    these method don't compare value with value/column,to do this you should user where raw
+    --------------------------
+    Query Buidler Select
+    select method overwrite previous selected columns every time call this method
+    addSelect adds columns to existing selected column
+    *** selectRaw uses addSelect so it will add instead of overwrite
+    *** selectSub uses selectRaw so it will add too
+    --------------------------
+    Query Builder Tips
+    1. write queries in sql order (select,joins,where,orderBy,limit,offset)
+    2. get method only select parameter columns if there is no select already in builder
+    3. sql will not generated when call builder methods,they will be stored on variables and by using toSql method they build sql query string
+    --------------------------
+
+    Eloquent Relationships
+    $user->cart()->save() doesn't mean user cart saves user but means user has one cart relationship saves cart
+
+    --------------------------
+
+    Eloquent Model Events
+    all model events only get dispatched if instance retrieved from database so calling query builder methods like update or delete directly doesn't dispatch such events
+    instead we should turn query to select and get results and loop through instances and call update or delete method or if using find or first we can call those methods directly on instance
+
+    --------------------------
+    Eloquent Naming
+    if you don't pass names for foreign keys,tables,... it will be determined by eloquent automatically
+    --------------------------  
+    Eloquent Querying Relationship Existence
+    has,whereHas,... methods use subquery and exists statements which may not be so performant for large datasets
+    --------------------------
+    Eloquent Queries
+    query selected columns stored on model attributes (except pivot which stored on separate object)
+    *** columns selected from a table can be stored on different model which may not related to table at all
+
+    so whatever columns selected from query,stored on model attributes because eloquent doesn't know anything about table columns
+
+    **** selected fields may not be actual table column,e.g. it can be subquery select
+         so only selected fields stored on model attributes
+    --------------------------
+    Eloquent vs DB
+    timestamp and model event are parts of eloquent ORM not database interface
+    --------------------------
+    Eloquent Pivot
+    by default only timestamps and foreign keys in pivot will be selected from query,for other columns, they must be explicitly selected
+    --------------------------
+    Array & JSON Conversion Of Model Object
+    model attributes are object by default
+    by default only selected attributes from query,relations,pivot,... shown in json or array version of model
+    by using $hidden or $visible we can specify to show only some attributes or ignore some attributes (only,except or omit,pick)(just like fillable and guarded)
+    and by using $appends we can append custom added attributes or accessors to array or json version of model object
+
+    *** all of above ways can be used dynamically by some methods at runtime
+    --------------------------
+
+    View Rendering
+    first main view get rendered e.g. page renders first then layouts gets rendered so can't use view composers for layouts and share layout data with page view
+	
+	--------------------------
+    Eloquent Model Attributes
+    eloquent can't cast some datatypes like boolean,... on model attributes by default,it only can detect null,string,integer,float,... 
+    so we shuld cast manually
+	--------------------------
+    Eloquent Query Binding
+    eloquent use numeric binding for parameters not named params
+	--------------------------
+
+    Relationship Loading
+    laravel eager loading is same as sequelize eager loading (different in action)
+    laravel lazy loading happens when access relations as property which differs from sequelize lazy loading
+    laravel lazy eager loading is same as sequelize lazy loading (except sequelize just return record not setting relationships on instance)
+
+    how laravel eager loads each relation:
+    first laravel queries for model itself and find all of them based on query
+    then for each relation create separate query and in that query get all records for those model instances that fetched from first query (only those that fetched not those specified in query filter,so only found instances)
+    uses `IN` and list of fetched instance ids as parameter
+    then assign each row to its corresponding model instance
+
+    when using load or with, even if relation is singular like hasOne,belongsTo uses `IN` query and find all related record and then assign each row to its corresponding model instance
+
+    (load internally uses `with` so they are identical)
+
+    so don't use with or load as much as you can because they are not very performant as sequelize is in most cases
+    but use them in cases when you have multiple record and must fetch relations for all of them at once,so in this case they are useful
+
+    when using load or with, relationship will be loaded and stored on model instance,this prevent lazy loading (accessing relationships as property)
+    but if call load or with again,new relationships records will be fetched and stored (so every call cause to perform new query and overwrite previous stored record)
+    stored relationships only used to prevent lazy loading
+
+    when lazy load relationships,just like load and with if relationships don't stored,they will be fetched and stored, so subsequent lazy loadings will be prevented
+	
+    every call to load or with,will perform separate query even if relationships loaded
+    so we can query for common relationships once and query for nested relationships on lazy loaded relationships 
+
+    ** every call to load/with will perform separate query but if we use load or with once with multiple same relationships it only get loaded once
+       so every call to load will load relations again but with loadMissing method, given relations only get loaded if not loaded already
+    
+    ** using both load and with,we can't access model loaded attributes,... in relationship methods
+
+    ** relations can be accessed like other attributes by their actuall method name,but in serialized json or array version,they will be in snake case format
+
+    ** we can't use pivot as relation in load or with, despite pivot placed in relation property
+    --------------------------
+
+    Eager Loading
+    eager loading in laravel differs from sequelize.in sequelize all all assocaitions happens in one query with join and get assembled correctly,but in laravel for each relation,separate query will be executed
+
+	--------------------------
+
+    Querying Relationship Existence & Querying Relationship Absence
+    these should be named `filter by relationships`
+
+	--------------------------
+
+    Many To Many Relationship
+    when fetch many to many relationship by default only keys (foreign keys) and timestamps columns from pivot will be selected
+    to add extra columns to select we can use withPivot in relation
+
+	--------------------------
+
+    JSON Column
+    laravel uses longtext column for json column if using mariaDB specific version
+    for json queries however uses native json statements
+	--------------------------
+	
+	Routing System
+	in non-cache mode laravel first create full route structure just like nested arrays in cached routes file, all routes will be in same level (flatten) and first matched route from start of array will handle request
+	in flatten mode there is no group or prefix or other features they are in same level and will be compared againts requst url
+	fallback routes has /xxx/xxx/xxx/{fallbackPlaceholder} pattern which matches every url after successfull match or url part before that (/xxx/xxx/xxx)
+
+    --------------------------
+
+    Service Providers
+    laravel run providers in order of bootstrap/services list
+    order is:
+    1. illuminate
+    2. packages (manually specified or auto discovered) which resolved from bootstrap/packages in order
+    3. application
+
+    if we change these providers order in config/app.php,laravel always order them like above order
+    so we can only remove from/add to those providers or change their orders relative to eachother not other type of provider
+    otherwise changing for example order of application providers and packages provider will be ignored and laravel fix the issue
+    so order always is based on above list but each provider relative to its siblings can be reordered
+
+    --------------------------
+
+    Accessors & Mutators
+
+    *** they can be named in camel case format but will be accessed in snake case format
+    
+    --------------------------
+
+    Package Development
+
+        Publishing Package Resources
+        publishing is just coping package resources into our project
+
+        publish will be used to access necessary or optional features of package
+        e.g. publishing package configurations,allows us to override default package configurations
+
+
+        we can either publish all publishes from single provider or publish all publishes from single tag or publish all publishes from single provider by specific tag
+        1. only provider
+        2. only tag
+        3. both provider and tag
+
+        *** also artisan has command to publish all publishes from any provider and tag
+        *** publish tag is alias for publish group
+        *** publishing multiple times will not overwrite previous publishes if filename exists

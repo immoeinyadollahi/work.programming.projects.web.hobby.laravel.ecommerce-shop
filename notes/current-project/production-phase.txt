@@ -1,0 +1,17 @@
+cleanup database tables like expired otp,...
+do verisioning for mix
+remove test storage folders
+
+
+
+in public_html only put .httacess and public folder (which contains another htaccess) and put all application contents into separte folder outside of public_html
+and rewirte non public files urls into server.php in application folder just like node js cpanel except that here we put public folder inside public_html
+
+    structure
+    public_html:
+            .htaccess (current root htaccess) (we chage server.php url to `../laravel-app/server.php`)
+            public folder
+    laravel-app:
+            server.php
+            ... (application content)
+

@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class {{ factory }}Factory extends Factory
+{
+
+    public function definition()
+    {
+        return [];
+    }
+}
