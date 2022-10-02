@@ -36,7 +36,7 @@
                                     </td>
                                     <td>{{ $_Date::formatDate($order->created_at) }}</td>
                                     <td>{{ $order->status_fa }}</td>
-                                    <td>{{ number_format($order->info->payment_cost) }} تومان برای
+                                    <td>{{ number_format($order->payment_cost) }} تومان برای
                                         {{ count($order->items) }}
                                         محصول</td>
                                 </tr>

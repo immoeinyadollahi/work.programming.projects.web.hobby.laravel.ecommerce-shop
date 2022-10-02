@@ -24,7 +24,7 @@ export default function DeleteConfirmModal({ attribute, onClose, onConfirm }) {
   return (
     <Modal show={isModalActive} onHide={() => setIsModalActive(false)} onExited={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>حذف ویژگی</Modal.Title>
+        <Modal.Title>حذف خصوصیت</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="d-flex flex-column align-items-center">

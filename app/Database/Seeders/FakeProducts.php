@@ -24,7 +24,7 @@ class FakeProducts extends Seeder
         foreach ($products as $product) {
             $main_category = Category::where("en", "shirts")->first();
             // Brand
-            $product->brand()->associate(Brand::where("en", "apple")->first());
+            $product->brand()->associate(Brand::where("en", "apple")->first())->save();
             // Tags
             $tags = TagFactory::new()->count(3)->state(["type" => Product::class])->create();
             foreach ($tags as $key => $tag) {

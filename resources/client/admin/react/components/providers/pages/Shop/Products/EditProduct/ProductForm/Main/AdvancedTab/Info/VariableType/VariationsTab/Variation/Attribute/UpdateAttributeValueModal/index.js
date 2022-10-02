@@ -46,7 +46,7 @@ export default function UpdateAttributeValueModal({ attributeValue, attributeDat
             })}
           </div>
         ) : (
-          <div className="alert alert-primary mb-0">مقداری در حال حاظر برای این ویژگی وجود ندارد</div>
+          <div className="alert alert-primary mb-0">مقداری در حال حاظر برای این خصوصیت وجود ندارد</div>
         )}
       </Modal.Body>
       <Modal.Footer>

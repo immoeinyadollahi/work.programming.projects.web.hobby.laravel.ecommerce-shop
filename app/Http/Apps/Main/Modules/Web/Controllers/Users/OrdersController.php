@@ -15,8 +15,15 @@ class OrdersController extends Controller
     public function getOrder($order_id)
     {
         $user = _user();
-        if (!($order = $user->orders()->find($order_id))) _http_abort(404);
+        $order = $user->orders()->findOrFail($order_id);
         $order->load("items.productSu.product.image", "address");
         return view("pages.users.order-detail", ["order" => $order]);
+    }
+    public function getPayOrder($order_id)
+    {
+        $user = _user();
+        $order = $user->orders()->findOrFail($order_id);
+        if ($order->status !== "pending") _http_abort(403);
+        return $order->payWithIPG($user);
     }
 }

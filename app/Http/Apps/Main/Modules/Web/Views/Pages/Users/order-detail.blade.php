@@ -31,19 +31,25 @@
                     <div>
                         <div class="d-flex mb-2">
                             <small>مبلغ کل : </small>
-                            <small class="mr-2">{{ number_format($order->info->payment_cost) }} تومان</small>
+                            <small class="mr-2">{{ number_format($order->payment_cost) }} تومان</small>
                         </div>
-                        @if ($order->info->total_discount_price)
+                        @if ($order->extra->total_discount_price)
                             <div class="d-flex mb-2 text-danger">
                                 <small>سود شما از خرید : </small>
-                                <small class="mr-2">{{ number_format($order->info->total_discount_price) }}
+                                <small class="mr-2">{{ number_format($order->extra->total_discount_price) }}
                                     تومان</small>
                             </div>
                         @endif
                     </div>
                     <div class="mb-3">
                         <h5 class="m-0">وضعیت</h5>
-                        <div class="text-success">{{ $order->status_fa }}</div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="text-success">{{ $order->status_fa }}</div>
+                            @if ($order->status === 'pending')
+                                <a href="{{ _route('users.orders.pay-order', ['order_id' => $order->id]) }}"
+                                    class="btn btn-primary">پرداخت</a>
+                            @endif
+                        </div>
                     </div>
                     <div>
                         <a class="collapsed order-transactions-collapse-btn" data-toggle="collapse"
@@ -89,7 +95,7 @@
                     <h5>کالاها</h5>
                     <div class="d-flex mb-2">
                         <small>جمع قیمت کالاها : </small>
-                        <small class="mr-2">{{ number_format($order->info->items_final_price) }} تومان</small>
+                        <small class="mr-2">{{ number_format($order->extra->items_final_price) }} تومان</small>
                     </div>
                     <div class="d-flex mb-4">
                         <small>هزینه ارسال : </small>

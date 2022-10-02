@@ -61,8 +61,8 @@ class MainController extends Controller
         $coupon = Coupon::getRequestCoupon();
         $cart->items->load("productSu");
         $cart_info = $cart->getInfo($coupon);
-        $new_order = $user->orders()->create(["payment_method" => "online", "info" => collect($cart_info)->except("coupon"), "description" => $req->input("description")]);
-        $new_order->address()->create([
+        $order = $user->orders()->create(["payment_method" => "online", 'payment_cost' => $cart_info['payment_cost'], "extra" => collect($cart_info)->except("coupon", "payment_cost"), "description" => $req->input("description")]);
+        $order->address()->create([
             'recipient_fullname' => $address->recipient_fullname,
             'recipient_email' => $address->recipient_email,
             'recipient_phone' => $address->recipient_phone,
@@ -72,36 +72,18 @@ class MainController extends Controller
             'province_id' => $address->province_id,
         ]);
         foreach ($cart->items as $item) {
-            $new_order->items()->create(["quantity" => $item->quantity, "product_su_price" => $item->productSu->price, "product_su_discounted_price" => $item->productSu->discounted_price, "product_su_id" => $item->productSu->id]);
+            $order->items()->create(["quantity" => $item->quantity, "product_su_price" => $item->productSu->price, "product_su_discounted_price" => $item->productSu->discounted_price, "product_su_id" => $item->productSu->id]);
             $item->productSu->stock -= $item->quantity;
             $item->productSu->save();
         }
         if ($coupon) {
-            $coupon->is_used = true;
-            $coupon->save();
+            $coupon->update(['is_used' => true]);
             session()->forget("coupon_id");
         }
         // clear cart items
         $cart->items()->delete();
-        // payment process
-        $invoice = new Invoice();
-        $invoice->amount($cart_info["payment_cost"]);
-        $invoice->detail(["email" => $user->email, "mobile" => $user->phone, "description" => "پرداخت سفارش محصولات"]);
 
-        $payment =  Payment::callbackUrl(_route("payment-callback"))->purchase($invoice);
-        // invoice transaction id will be populated after purchasing invoice otherwise it is null by default
-        $new_order->transactions()->create([
-            "transaction_id" => $invoice->getTransactionId(),
-            "amount" => $invoice->getAmount(),
-            "email" => $invoice->getDetail("email"),
-            "mobile" => $invoice->getDetail("mobile"),
-            "description" => $invoice->getDetail("description"),
-        ]);
-
-        $pg_redirection = $payment->pay();
-        $token = PaymentRedirectionToken::createJwtToken($pg_redirection->jsonSerialize())->token;
-
-        return redirect()->_route("payment-redirect", compact('token'));
+        return $order->payWithIPG($user);
     }
     public function getPaymentRedirect()
     {
@@ -127,9 +109,7 @@ class MainController extends Controller
 
         try {
             $receipt = Payment::amount($transaction->amount)->transactionId($transaction_id)->verify();
-            $transaction->is_done = true;
-            $transaction->ref_id = $receipt->getReferenceId();
-            $transaction->save();
+            $transaction->update(['is_done' => true, 'ref_id' => $receipt->getReferenceId()]);
             $transaction->order()->_updateFirst(["status" => "processing"]);
             return redirect("/")->_withMessage("سفارش با موفقیت پرداخت شد", "success");
         } catch (Exception $ex) {
@@ -253,7 +233,7 @@ class MainController extends Controller
         $req = request();
         $search_term = $req->query("q");
         $tag = $req->query("tag");
-        if (!($search_term || $tag)) _http_abort(404);
+        if ($search_term === null && $tag === null) _http_abort(404);
         $request_query_result = [];
         $paginator = Product::aggregateBySearch($search_term, $tag, $request_query_result);
 

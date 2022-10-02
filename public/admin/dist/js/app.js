@@ -1672,7 +1672,7 @@ function DeleteConfirmModal(_ref) {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Header, {
       closeButton: true,
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Title, {
-        children: "\u062D\u0630\u0641 \u0648\u06CC\u0698\u06AF\u06CC"
+        children: "\u062D\u0630\u0641 \u062E\u0635\u0648\u0635\u06CC\u062A"
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Body, {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
@@ -1924,7 +1924,7 @@ function UpdateValuesModal(_ref) {
         })
       }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
         className: "alert alert-primary mb-0",
-        children: "\u0645\u0642\u062F\u0627\u0631\u06CC \u062F\u0631 \u062D\u0627\u0644 \u062D\u0627\u0638\u0631 \u0628\u0631\u0627\u06CC \u0627\u06CC\u0646 \u0648\u06CC\u0698\u06AF\u06CC \u0648\u062C\u0648\u062F \u0646\u062F\u0627\u0631\u062F"
+        children: "\u0645\u0642\u062F\u0627\u0631\u06CC \u062F\u0631 \u062D\u0627\u0644 \u062D\u0627\u0638\u0631 \u0628\u0631\u0627\u06CC \u0627\u06CC\u0646 \u062E\u0635\u0648\u0635\u06CC\u062A \u0648\u062C\u0648\u062F \u0646\u062F\u0627\u0631\u062F"
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["default"].Footer, {
       children: [initialValues.length ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("button", {
@@ -2854,7 +2854,7 @@ function Actions() {
           children: "\u0627\u0641\u0632\u0648\u062F\u0646 \u0645\u062A\u063A\u06CC\u0631"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("option", {
           value: "create-variations-from-attributes",
-          children: "\u0633\u0627\u062E\u062A\u0646 \u0645\u062A\u063A\u06CC\u0631 \u0647\u0627 \u0627\u0632 \u0647\u0645\u0647 \u0648\u06CC\u0698\u06AF\u06CC \u0647\u0627"
+          children: "\u0633\u0627\u062E\u062A\u0646 \u0645\u062A\u063A\u06CC\u0631 \u0647\u0627 \u0627\u0632 \u0647\u0645\u0647 \u062E\u0635\u0648\u0635\u06CC\u062A \u0647\u0627"
         }), variations.length ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("option", {
           value: "remove-all-variations",
           children: "\u062D\u0630\u0641 \u0647\u0645\u0647 \u0645\u062A\u063A\u06CC\u0631 \u0647\u0627"
@@ -2997,7 +2997,7 @@ function UpdateAttributeValueModal(_ref) {
         })
       }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
         className: "alert alert-primary mb-0",
-        children: "\u0645\u0642\u062F\u0627\u0631\u06CC \u062F\u0631 \u062D\u0627\u0644 \u062D\u0627\u0638\u0631 \u0628\u0631\u0627\u06CC \u0627\u06CC\u0646 \u0648\u06CC\u0698\u06AF\u06CC \u0648\u062C\u0648\u062F \u0646\u062F\u0627\u0631\u062F"
+        children: "\u0645\u0642\u062F\u0627\u0631\u06CC \u062F\u0631 \u062D\u0627\u0644 \u062D\u0627\u0638\u0631 \u0628\u0631\u0627\u06CC \u0627\u06CC\u0646 \u062E\u0635\u0648\u0635\u06CC\u062A \u0648\u062C\u0648\u062F \u0646\u062F\u0627\u0631\u062F"
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Footer, {
       children: [initialValues.length ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {

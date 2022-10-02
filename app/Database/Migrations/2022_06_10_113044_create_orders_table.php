@@ -11,9 +11,10 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->json('info');
+            $table->json('extra');
             $table->enum("status", ['delivered', 'canceled', 'pending', 'returned', 'processing'])->default("pending");
             $table->enum('payment_method', ['on-delivering', 'online']);
+            $table->integer('payment_cost');
             $table->text('description')->nullable();
             $table->_foreignKey("user_id")->on("users")->cascadeOnDelete();
             $table->timestamps();

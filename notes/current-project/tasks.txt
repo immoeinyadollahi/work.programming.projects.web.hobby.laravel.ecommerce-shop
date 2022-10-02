@@ -133,15 +133,18 @@
     so only first product main category comparable categories include itself are searchable
 
     change message danger to error or ...
-
     don't let users make orders without phone number
-    fix search page,can can be used without "q" query param using tags or ...
-
-    replace client attribute from ویژگی to خصوصیت
+	
 	replace all client select to react-select
     complete client main category change test variations and properties and complete attributes
 	
 	product must have category to be published
+	
+	replacing setting properties with update method on model which is sames as fill and save
+	
+	variableProductTypeAttributePivots
+	variableTypeAttributePivots
+	
 
     replace all if(!xxx:find())_http_abort() to findorFail and for delete and update use deleteFirstOrFail
     make all urls map to route names

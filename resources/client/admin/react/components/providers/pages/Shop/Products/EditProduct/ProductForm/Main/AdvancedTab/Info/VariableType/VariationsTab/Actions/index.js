@@ -116,7 +116,7 @@ export default function Actions() {
                 >
                     <option value="create-variation">افزودن متغیر</option>
                     <option value="create-variations-from-attributes">
-                        ساختن متغیر ها از همه ویژگی ها
+                        ساختن متغیر ها از همه خصوصیت ها
                     </option>
                     {variations.length ? (
                         <option value="remove-all-variations">
