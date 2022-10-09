@@ -6,17 +6,17 @@ import * as propertiesHttp from "$http/shop/products/properties";
 import { useState } from "$hooks/core/state";
 import useData from "$hooks/actions/useData";
 import useErrorHandler from "$hooks/common/useErrorHandler";
-import SelectedValue from "./SelectedValue";
+import SelectedProperty from "./SelectedProperty";
 
-const SortableItem = SortableElement(SelectedValue);
-const SortableList = SortableContainer(({ selectedValues, properties, handleRemoveSelectedValue }) => {
-  const values = Array.from(selectedValues.entries());
+const SortableItem = SortableElement(SelectedProperty);
+const SortableList = SortableContainer(({ selectedProperties, categoryProperties, handleRemoveSelectedProperty }) => {
+  const properties = Array.from(selectedProperties.entries());
   return (
     <div className="mt-5 border-top">
-      {values.map(([propertyId, valueId], idx) => {
-        const property = properties.find((property) => property.id === propertyId);
+      {properties.map(([propertyId, valueId], idx) => {
+        const property = categoryProperties.find((property) => property.id === propertyId);
         const value = property.pivot.values.find((value) => value.id === valueId);
-        return <SortableItem key={value.id} property={property} value={value} onRemove={() => handleRemoveSelectedValue(valueId)} index={idx} />;
+        return <SortableItem key={value.id} property={property} value={value} onRemove={() => handleRemoveSelectedProperty(propertyId)} index={idx} />;
       })}
     </div>
   );
@@ -24,30 +24,33 @@ const SortableList = SortableContainer(({ selectedValues, properties, handleRemo
 export default function SelectPropertiesModal({ onClose, onSave }) {
   const [isModalActive, setIsModalActive] = useState(true);
   const [isSubmiting, setIsSubmiting] = useState(false);
-  const [selectedValues, setSelectedValues, updateSelectedValues] = useState();
-  const { data } = useData();
+  const {
+    data: { product },
+  } = useData();
+  const initialSelectedProperties = useMemo(() => product.properties.reduce((acc, current) => (acc.set(current.id, current.pivot.property_value_id), acc), new Map()), []);
+  const [selectedProperties, setSelectedProperties, updateSelectedProperties] = useState(initialSelectedProperties);
   const { handleHttpError } = useErrorHandler();
   const handleSaveChanges = async () => {
     try {
       setIsSubmiting(true);
-      await propertiesHttp.postSave(data.product.id, { properties: Array.from(selectedValues.entries()).map(([propertyId, valueId]) => ({ property_id: propertyId, value_id: valueId })) });
+      await propertiesHttp.postSave(product.id, { properties: Array.from(selectedProperties.entries()).map(([propertyId, valueId]) => ({ property_id: propertyId, value_id: valueId })) });
       setIsModalActive(false);
       onSave();
     } catch (err) {
       handleHttpError(err, { onBeforeDefaultAction: () => setIsSubmiting(false) });
     }
   };
-  const handleSelectedValuesSortEnd = ({ oldIndex, newIndex }) => {
+  const handleSelectedPropertiesSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex === newIndex) return;
-    const selectedValuesEntries = Array.from(selectedValues.entries());
-    selectedValuesEntries.splice(newIndex, 0, selectedValuesEntries.splice(oldIndex, 1)[0]);
-    setSelectedValues(new Map(selectedValuesEntries));
+    const selectedPropertiesEntries = Array.from(selectedProperties.entries());
+    selectedPropertiesEntries.splice(newIndex, 0, selectedPropertiesEntries.splice(oldIndex, 1)[0]);
+    setSelectedProperties(new Map(selectedPropertiesEntries));
   };
-  const handleRemoveSelectedValue = (selectedValueId) => {
-    setSelectedValues(new Map(Array.from(selectedValues.entries()).filter(([, valueId]) => valueId !== selectedValueId)));
+  const handleRemoveSelectedProperty = (selectedPropertyId) => {
+    setSelectedProperties(new Map(Array.from(selectedProperties.entries()).filter(([propertyId]) => propertyId !== selectedPropertyId)));
   };
 
-  const categoryProperties = data.product.main_category.properties;
+  const categoryProperties = product.main_category.properties;
   return (
     <Modal show={isModalActive} onHide={() => setIsModalActive(false)} onExited={onClose} centered scrollable>
       <Modal.Header closeButton>
@@ -62,7 +65,7 @@ export default function SelectPropertiesModal({ onClose, onSave }) {
                 <Accordion.Body>
                   {property.pivot.values.map((value, idx) => (
                     <div className={`form-check form-check-custom form-check-sm${idx > 0 ? " mt-3" : ""}`} key={value.id}>
-                      <input id={`property-value-${value.id}`} className="form-check-input" type="radio" checked={selectedValues.get(property.id) === value.id} onChange={() => updateSelectedValues((selectedValues) => selectedValues.set(property.id, value.id))} />
+                      <input id={`property-value-${value.id}`} className="form-check-input" type="radio" checked={selectedProperties.get(property.id) === value.id} onChange={() => updateSelectedProperties((selectedProperties) => selectedProperties.set(property.id, value.id))} />
                       <label className="form-check-label" htmlFor={`property-value-${value.id}`}>
                         {value.value}
                       </label>
@@ -73,7 +76,7 @@ export default function SelectPropertiesModal({ onClose, onSave }) {
             ))}
           </Accordion>
         </div>
-        {selectedValues.size ? <SortableList selectedValues={selectedValues} properties={categoryProperties} handleRemoveSelectedValue={handleRemoveSelectedValue} onSortEnd={handleSelectedValuesSortEnd} useDragHandle /> : null}
+        {selectedProperties.size ? <SortableList selectedProperties={selectedProperties} categoryProperties={categoryProperties} handleRemoveSelectedProperty={handleRemoveSelectedProperty} onSortEnd={handleSelectedPropertiesSortEnd} useDragHandle /> : null}
       </Modal.Body>
       <Modal.Footer>
         <button className="btn btn-primary" onClick={handleSaveChanges} disabled={isSubmiting}>

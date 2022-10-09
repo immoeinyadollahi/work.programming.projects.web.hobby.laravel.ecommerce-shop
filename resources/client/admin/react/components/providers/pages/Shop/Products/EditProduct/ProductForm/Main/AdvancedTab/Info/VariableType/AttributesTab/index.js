@@ -31,14 +31,13 @@ export default function AttributesTab() {
   const categoryAttributes = data.product.main_category.attributes;
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useHasUnsavedChanges("AdvancedTab.VariableType.AttributesTab");
-  const selectedAttributes = useMemo(() => categoryAttributes.filter((categoryAttribute) => productAttributes.some((attribute) => attribute.attribute_id === categoryAttribute.id)), [productAttributes.length]);
-  const [initialAddableAttribute, initialAttributesOrdering] = useMemo(() => [categoryAttributes.find((attr) => !selectedAttributes.includes(attr))?.id || categoryAttributes[0].id, productAttributes.map((attribute) => attribute.id)], []);
+  const [initialAddableAttribute, initialAttributesOrdering] = useMemo(() => [categoryAttributes.find((attribute) => !productAttributes.includes(attribute))?.id || categoryAttributes[0].id, productAttributes.map((attribute) => attribute.id)], []);
   const [selectedAttribute, setSelectedAttribute] = useState(initialAddableAttribute);
   const [attributesOrdering, setAttributesOrdering, updateAttributesOrdering] = useState(initialAttributesOrdering);
   const orderedAttributes = useMemo(() => attributesOrdering.map((attrId) => productAttributes.find((attribute) => attribute.id === attrId)).filter(Boolean), [attributesOrdering, productAttributes]);
   useDependencyChangeEffect(() => {
-    if (selectedAttributes.some((attr) => attr.id === selectedAttribute)) {
-      const nextAttribute = categoryAttributes.find((attr) => !selectedAttributes.includes(attr));
+    if (productAttributes.some((attribute) => attribute.id === selectedAttribute)) {
+      const nextAttribute = categoryAttributes.find((attribute) => !productAttributes.includes(attribute));
       if (nextAttribute) setSelectedAttribute(nextAttribute.id);
     }
     if (productAttributes.length > attributesOrdering.length) {
@@ -79,7 +78,7 @@ export default function AttributesTab() {
     _Global.set("shouldRefetchVariations", true);
     setHasUnsavedChanges(false);
   };
-  const hasAllAttributes = selectedAttributes.length === categoryAttributes.length;
+  const hasAllAttributes = productAttributes.length === categoryAttributes.length;
   return (
     <>
       <div className="d-flex align-items-center justify-content-between">
@@ -89,7 +88,7 @@ export default function AttributesTab() {
             className="me-4 ms-2 min-w-100px"
             options={categoryAttributes.map((attribute) => ({ value: attribute.id, label: attribute.fa }))}
             isDisabled={hasAllAttributes}
-            isOptionDisabled={(option) => selectedAttributes.some((attribute) => attribute.id === option.value)}
+            isOptionDisabled={(option) => productAttributes.some((attribute) => attribute.id === option.value)}
             isRtl={true}
             value={_.pickAs(
               categoryAttributes.find((attribute) => attribute.id === selectedAttribute),

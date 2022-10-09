@@ -4,8 +4,6 @@ namespace App\Http\Apps\Main\Modules\Web\Controllers;
 
 use Exception;
 
-use Illuminate\Database\Eloquent\Collection;
-use Shetabit\Multipay\Invoice;
 use Shetabit\Payment\Facade\Payment;
 
 use App\Classes\Base\Routing\Controller;
@@ -144,36 +142,37 @@ class MainController extends Controller
     public function getProduct($product_id, $product_slug = null)
     {
         $req = request();
-        $product = Product::select("products.*")->withSelectedSu(["conditions" => ["only_available" => false]])->withUserFavouriteCheck()->findOrFail($product_id);
+        $user = _user();
+        $product = Product::published()->findOrFail($product_id);
+        if (!($product->selected_su = $product->getSelectedSu())) _http_abort(404);
         if (!($product_slug && $product_slug === $product->slug)) return redirect()->_route("product", ["product_id" => $product_id, "product_slug" => $product->slug]);
         // user visit
         if (!$product->visits()->where("user_ip", $req->ip())->exists()) $product->visits()->create(["user_ip" => $req->ip()]);
-        $main_category = $product->mainCategory()->first();
-        // Image
-        $product->image = $product->image()->first();
-        // Thumbnails
-        $product->thumbnails = $product->thumbnails()->_ordered()->get();
-        // Tags
-        $product->tags = $product->tags()->_orderedByPivot()->get();
-        // Categories
-        $product->categories = $product->categories()->orderBy("level")->get();
-        // Brand
+        // user favourite
+        if ($user) $product->is_user_favourite = $product->favoredByUsers()->where("users.id", $user->id)->exists();
+        // brand
         $product->brand = $product->brand()->first();
-        // Specification
+        // image
+        $product->image = $product->image()->first();
+        // thumbnails
+        $product->thumbnails = $product->thumbnails()->_ordered()->get();
+        // tags
+        $product->tags = $product->tags()->_orderedByPivot()->get();
+        // categories
+        $product->categories = $product->categories()->orderBy("level")->get();
+        // main category
+        $product->main_category = $product->mainCategory()->first();
+        // specifications
         $product->specification_groups = $product->specificationGroups()->_ordered()->with(["items" => fn ($query) => $query->_ordered()])->get();
-        // Comments
-        $comments_paginator = $product->comments_paginator = $product->comments()->with("user.profileImage")->where("is_verified", true)->latest()->_basePaginate(["page" => 1, "limit" => 9]);
-        $comments_paginator->withPath("/ajax/products/$product->id/comments");
-        // Su
-        if ($product->is_variable) {
-            $variations = $product->variableTypeVariations()->with(["variableProductTypeAttributes" => fn ($query) => $query->_orderedByPivot()])->active()->inStock()->_ordered()->get();
-            $product->variable_type = (object)["variations" => $variations, "attributes" => $product->variableTypeAttributes()->_orderedByPivot()->get()];
-        }
-        // Related Products
-        $product->related_products = $main_category->products()->select("products.*")->withSelectedSu()->withUserFavouriteCheck()->where("products.id", "!=", $product->id)->orderBy("avg_rating")->limit(10)->with("image")->get();
+        // comments
+        $product->comments_paginator = $product->comments()->with("user.profileImage")->where("is_verified", true)->latest()->_basePaginate(["page" => 1, "limit" => 9])->withPath("/ajax/products/$product->id/comments");
+        // variable type
+        if ($product->is_variable)  $product->variable_type = ["variations" => $product->variableTypeVariations()->with(["variableProductTypeAttributes" => fn ($query) => $query->_orderedByPivot()])->active()->inStock()->_ordered()->get(), "attributes" => $product->variableTypeAttributes()->_orderedByPivot()->get()];
+        // related products
+        $product->related_products = $product->main_category->products()->select("products.*")->withSelectedSu()->withUserFavouriteCheck()->where("products.id", "!=", $product->id)->orderBy("avg_rating")->limit(10)->with("image")->get();
 
-        $product->makeHidden('related_products', 'specification_groups', 'brand', 'categories', 'tags', 'comments_paginator', 'thumbnails', 'image');
-        return view("pages.main.product", ["product" => $product]);
+        $product->makeHidden('product', 'related_products', 'specification_groups', 'brand', 'categories', 'tags', 'comments_paginator', 'thumbnails', 'image');
+        return view("pages.main.product", compact('product'));
     }
     public function postProductComment($product_id)
     {
@@ -221,12 +220,11 @@ class MainController extends Controller
         // category brands
         $category->brands = $category->brands()->_orderedByPivot()->get();
         // category properties
-        $category->properties = $category->properties()->_orderedByPivot()->get();
-        (new Collection($category->properties->pluck("pivot")))->load(["values" => fn ($query) => $query->_orderedByPivot()]);
+        $category->properties = $category->properties()->_orderedByPivot()->with(["pivot.values" => fn ($query) => $query->_orderedByPivot()])->get();
         // category attributes
-        $category->attributes = $category->attributes()->_orderedByPivot()->get();
-        (new Collection($category->attributes->pluck("pivot")))->load(["values" => fn ($query) => $query->_orderedByPivot()]);
-        return view("pages.main.shop", ["paginator" => $paginator, "category" => $category]);
+        $category->attributes = $category->attributes()->_orderedByPivot()->with(["pivot.values" => fn ($query) => $query->_orderedByPivot()])->get();
+
+        return view("pages.main.shop", compact('paginator', 'category'));
     }
     public function getSearch()
     {
@@ -239,6 +237,7 @@ class MainController extends Controller
 
         $brands = Brand::all();
         $categories = Category::where("level", 1)->get();
+
         return view("pages.main.search", compact("paginator", "brands", "categories", 'request_query_result'));
     }
     public function getPost($post_id, $post_slug = null)

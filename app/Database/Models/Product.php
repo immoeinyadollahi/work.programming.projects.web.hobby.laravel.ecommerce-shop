@@ -162,22 +162,6 @@ class Product extends Model
                     }
                     if (!$query_filters["brands"]) return false;
                 }
-                // Attributes Filter
-                $query_filters["attributes"] = null;
-                $request_attributes_filter = $request_filters["attributes"];
-                if ($request_attributes_filter) {
-                    if (is_array($request_attributes_filter)) {
-                        $request_attributes_filter = collect($request_attributes_filter);
-                        if (
-                            $request_attributes_filter->every(fn ($values, $key) => is_numeric($key) && is_array($values)) &&
-                            count($category_attributes = $category->attributes()->whereIn("attributes.id", $request_attributes_filter->keys())->get()) === $request_attributes_filter->count() &&
-                            $category_attributes->every(fn ($attribute) => $attribute->pivot->values()->whereIn("attribute_values.id", $attribute_values = $request_attributes_filter[$attribute->id])->count() === count($attribute_values))
-                        ) {
-                            $query_filters["attributes"] = $request_attributes_filter;
-                        }
-                    }
-                    if (!$query_filters["attributes"]) return false;
-                }
                 // Properties Filter
                 $query_filters["properties"] = null;
                 $request_properties_filter = $request_filters["properties"];
@@ -194,6 +178,22 @@ class Product extends Model
                     }
                     if (!$query_filters["properties"]) return false;
                 };
+                // Attributes Filter
+                $query_filters["attributes"] = null;
+                $request_attributes_filter = $request_filters["attributes"];
+                if ($request_attributes_filter) {
+                    if (is_array($request_attributes_filter)) {
+                        $request_attributes_filter = collect($request_attributes_filter);
+                        if (
+                            $request_attributes_filter->every(fn ($values, $key) => is_numeric($key) && is_array($values)) &&
+                            count($category_attributes = $category->attributes()->whereIn("attributes.id", $request_attributes_filter->keys())->get()) === $request_attributes_filter->count() &&
+                            $category_attributes->every(fn ($attribute) => $attribute->pivot->values()->whereIn("attribute_values.id", $attribute_values = $request_attributes_filter[$attribute->id])->count() === count($attribute_values))
+                        ) {
+                            $query_filters["attributes"] = $request_attributes_filter;
+                        }
+                    }
+                    if (!$query_filters["attributes"]) return false;
+                }
             },
             "on_su_selected" => function ($query, $query_filters) {
                 $query
@@ -313,10 +313,6 @@ class Product extends Model
     {
         return $this->belongsToMany(Attribute::class, VariableProductAttribute::class)->withTimestamps()->withPivot(["id", "order"]);
     }
-    public function variableTypeAttributePivots()
-    {
-        return $this->hasMany(VariableProductAttribute::class, "product_id");
-    }
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');
@@ -361,10 +357,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductVisit::class, "product_id");
     }
-    // properties refer to property values not Property
     public function properties()
     {
-        return $this->belongsToMany(PropertyValue::class, ProductPropertyX::class)->withTimestamps();
+        return $this->belongsToMany(Property::class, ProductPropertyX::class)->withTimestamps();
     }
 
     public function scopePublished($query)
@@ -393,6 +388,15 @@ class Product extends Model
         return $query->selectRaw('IFNULL((' . $favourite_check_query->toSql() . '),0) as is_user_favourite', $favourite_check_query->getBindings());
     }
 
+    public function getSelectedSu()
+    {
+        switch ($this->type) {
+            case 'simple':
+                return $this->simpleTypeSu()->active()->first();
+            case 'variable':
+                return $this->variableTypeVariations()->active()->orderByRaw('if (stock = 0,999999999999,sale_price),stock desc')->first();
+        }
+    }
     public function getMainCategoryWithRelatedData()
     {
         $main_category = $this->mainCategory()->with(collect(['brands', 'properties', 'attributes'])->reduce(function ($acc, $current) {
@@ -406,6 +410,19 @@ class Product extends Model
             }
         }
         return $main_category;
+    }
+    public function sortVariableTypeAttributes($attribute_ids)
+    {
+        $attributes_ordering_update = $attribute_ids->reduce(function ($acc, $current, $key) {
+            $acc[$current] = ['order' => $key + 1];
+            return $acc;
+        }, []);
+        $this->variableTypeAttributes()->sync($attributes_ordering_update);
+        $this->variableTypeVariations()->get()->each(fn ($variation) => $variation->variableProductTypeAttributes()->sync($attributes_ordering_update));
+    }
+    public function rearrangeVariableTypeAttributes()
+    {
+        $this->sortVariableTypeAttributes($this->variableTypeAttributes()->_orderedByPivot()->pluck("attributes.id"));
     }
 
     protected function isVariable(): CastAttribute

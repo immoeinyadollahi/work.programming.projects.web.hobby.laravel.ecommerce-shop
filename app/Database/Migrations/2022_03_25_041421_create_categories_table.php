@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('fa');
             $table->string('slug');
             $table->text('description')->nullable();
-            $table->_orderable('level');
+            $table->integer('level');
             $table->boolean("is_last_level")->default(false);
             // category order between other categories in same parent
             $table->_orderable('sibling_order');

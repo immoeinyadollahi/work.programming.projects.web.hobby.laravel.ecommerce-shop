@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerMacros();
+        $this->test();
     }
     public function registerMacros()
     {
@@ -132,5 +133,8 @@ class AppServiceProvider extends ServiceProvider
             $key = DBKey::where(["type" => "foreign", "columns" => $column, "table" => $this->getTable()])->first();
             return $this->dropForeign("key_" . $key->id);
         });
+    }
+    public function test()
+    {
     }
 }

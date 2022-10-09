@@ -16,45 +16,47 @@ class VariationsController extends Controller
 {
     public function getVariations($product_id)
     {
-        if (!($product = Product::find($product_id))) _http_abort(404);
-        $variations = $product->variableTypeVariations()->with(["variableProductTypeAttributePivots" => fn ($query) => $query->_ordered()])->_ordered()->get();
-        return ["variations" => $variations];
+        $product = Product::findOrFail($product_id);
+        return ["variations" => $product->variableTypeVariations()->with(["variableProductTypeAttributes" => fn ($query) => $query->_orderedByPivot()])->_ordered()->get()];
     }
     public function getPerformAction($product_id, $action_name)
     {
-        if (!($product = Product::find($product_id))) _http_abort(404);
+        $product = Product::findOrFail($product_id);
         switch ($action_name) {
             case "create-variation":
                 $variation_order = $product->variableTypeVariations()->count() + 1;
                 $variation = $product->su()->create(["product_type" => "variable", "order" => $variation_order]);
-                $attributes = $product->variableTypeAttributes()->_orderedByPivot()->get();
-                foreach ($attributes as $attribute) {
-                    $variation->variableProductTypeAttributePivots()->create(["order" => $attribute->pivot->order, "attribute_id" => $attribute->id]);
-                }
-                $variation->load(["variableProductTypeAttributePivots" => fn ($query) => $query->_ordered()]);
-                return ["variation" => $variation];
+                $variation_attributes = $product->variableTypeAttributes()->_orderedByPivot()->pluck("attributes.id")->reduce(function ($acc, $current, $key) {
+                    $acc[$current] = ['order' => $key + 1];
+                    return $acc;
+                }, []);
+                $variation->variableProductTypeAttributes()->sync($variation_attributes);
+                $variation->load(["variableProductTypeAttributes" => fn ($query) => $query->_orderedByPivot()]);
+                return compact('variation');
             case "create-variations-from-attributes":
-                $variations = $product->variableTypeVariations()->with("variableProductTypeAttributePivots")->get();
-                $attributes = $product->variableTypeAttributes()->_orderedByPivot()->get();
-                $attributes_values = [];
+                $current_variations = $product->variableTypeVariations()->with("variableProductTypeAttributes")->get();
+                $attributes = $product->variableTypeAttributes()->_orderedByPivot()->with('pivot.values')->get();
+                $attributes_with_values = [];
                 foreach ($attributes as $attribute) {
-                    $attributes_values[$attribute->id] = $attribute->pivot->values()->get()->map(fn ($value) => $value->id);
+                    $attributes_with_values[$attribute->id] = $attribute->pivot->values->pluck("id");
                 }
-                $attributes_cartesian_product = new CartesianProduct($attributes_values);
+                $attributes_cartesian_product = new CartesianProduct($attributes_with_values);
                 $new_variations_count = 0;
                 $new_variation_order = $product->variableTypeVariations()->count() + 1;
                 foreach ($attributes_cartesian_product as $combination) {
-                    if (!$variations->some(function ($variation) use ($combination) {
-                        return $variation->variableProductTypeAttributePivots->every(fn ($attribute) => $attribute->attribute_value_id && $combination[$attribute->id] === $attribute->attribute_value_id);
+                    if (!$current_variations->some(function ($variation) use ($combination) {
+                        return $variation->variableProductTypeAttributes->every(fn ($attribute) => $attribute->pivot->attribute_value_id && $combination[$attribute->id] === $attribute->pivot->attribute_value_id);
                     })) {
                         $variation = $product->su()->create(["product_type" => "variable", "order" => $new_variation_order++]);
+                        $variation_attributes = $attributes->pluck("id")->reduce(function ($acc, $current, $key) use ($combination) {
+                            $acc[$current] = ['order' => $key + 1, 'attribute_value_id' => $combination[$current]];
+                            return $acc;
+                        }, []);
+                        $variation->variableProductTypeAttributes()->sync($variation_attributes);
                         $new_variations_count++;
-                        foreach ($attributes as $attribute) {
-                            $variation->variableProductTypeAttributePivots()->create(["order" => $attribute->pivot->order, "attribute_id" => $attribute->id, "attribute_value_id" => $combination[$attribute->en]]);
-                        }
                     }
                 }
-                return ["new_variations_count" => $new_variations_count];
+                return compact('new_variations_count');
             case "remove-all-variations":
                 $product->variableTypeVariations()->delete();
                 return response()->_ok();
@@ -75,10 +77,12 @@ class VariationsController extends Controller
         }
         if ($errors) _http_abort(422, $errors, HttpException::CTX_ERRORS);
         foreach ($variations as $key => $variation) {
+            $su = ProductSu::find($variation["id"]);
             foreach ($variation["attributes"] as $attribute_id => $value_id) {
-                VariableProductSuAttribute::where(["product_su_id" => $variation["id"], "attribute_id" => $attribute_id])->_updateFirst(["attribute_value_id" => $value_id]);
+                $attribute =  $su->variableTypeAttributes()->where("attributes.id", $attribute_id)->first();
+                $attribute->pivot->update(['attribute_value_id' => $value_id]);
             }
-            ProductSu::where("id", $variation["id"])->_updateFirst([
+            $su->update([
                 "price" => $price = $variation["price"],
                 "discounted_price" => $discounted_price = $variation["discounted_price"],
                 "discount_price" => $discount_price = $discounted_price ? $price - $discounted_price : null,
@@ -95,14 +99,10 @@ class VariationsController extends Controller
     }
     public function deleteVariation($variation_id)
     {
-        if (!($variation = ProductSu::find($variation_id))) _http_abort(404);
+        $variation = ProductSu::findOrFail($variation_id);
         $product = $variation->product()->first();
         $variation->delete();
-        $variations = $product->variableTypeVariations()->_ordered()->get();
-        foreach ($variations as $key => $variation) {
-            $variation->order = $key + 1;
-            $variation->save();
-        }
+        $product->variableTypeVariations()->_ordered()->get()->each(fn ($variation, $key) => $variation->update(["order" => $key + 1]));
         return response()->_ok();
     }
 }

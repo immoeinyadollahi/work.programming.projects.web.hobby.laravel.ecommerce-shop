@@ -64,7 +64,7 @@
     control product simple and variable type based on its last category attributes and also limit select attribute if category doesn't have that attribute
     ***** product can be simple even if its category have attributes because digikala use samething,so product first option is variable type but can switch to simple
 
-		use controller instead of ctrl
+	use controller instead of ctrl
 
 
     fix client naming for attributes
@@ -120,7 +120,7 @@
     check for select sub for limit 1
 
     fix wishlish query wrong su selected for some products
-
+	
 
     change http context exception context from messages to somthing else
     fix page loader in main layout master for shop and ...
@@ -142,10 +142,18 @@
 	
 	replacing setting properties with update method on model which is sames as fill and save
 	
-	variableProductTypeAttributePivots
-	variableTypeAttributePivots
+	Search these and fix
 	
+	1. variableProductTypeAttributePivots
+	variableTypeAttributePivots
+	2. // for improving queries
+		just like productTypeAttributes fix product properties
 
+   *** NOT SURE *** convert $x->relation=$x->relation->get() to $x->load() only for multi result relations not for belongs to relations
+	
+    use compact instead of filling array in old ways
+
+    put ->with in end of other statements
     replace all if(!xxx:find())_http_abort() to findorFail and for delete and update use deleteFirstOrFail
     make all urls map to route names
     in server check for resources if exists because may be deleted in different tab but don't check for data passed to server because we know that regular users from browsers send controlled data
@@ -201,6 +209,7 @@
     convert empty string to null if needed
     email verified middleware instead of laravel verified middleware
     throttle password reset and email verification mail if needed
+    custom controller methods instead of using return response()->_method()
     implement realtime reports in admin
     product su maxmium quantity in each order
     comment system for both product and posts in seprate tables with like and dislike each comment (morph)

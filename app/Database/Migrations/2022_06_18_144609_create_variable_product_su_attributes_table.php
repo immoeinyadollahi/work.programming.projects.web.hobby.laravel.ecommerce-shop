@@ -12,9 +12,8 @@ return new class extends Migration
         Schema::create('variable_product_su_attributes', function (Blueprint $table) {
             $table->id();
             $table->_orderable();
-            // for improving queries
-            $table->integer("attribute_id");
-            $table->_foreignKey("attribute_value_id")->on("attribute_values")->cascadeOnDelete();
+            $table->integer("attribute_value_id");
+            $table->_foreignKey("attribute_id")->on("attributes")->cascadeOnDelete();
             $table->_foreignKey("product_su_id")->on("products_su")->cascadeOnDelete();
             $table->timestamps();
         });

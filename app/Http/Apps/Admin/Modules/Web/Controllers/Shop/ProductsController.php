@@ -56,13 +56,14 @@ class ProductsController extends Controller
         // specifications
         $product->specification_groups = $product->specificationGroups()->_ordered()->with(["items" => fn ($query) => $query->_ordered()])->get();
         // properties
-        $product->properties = $product->properties()->with("property")->_orderedByPivot()->get();
+        $product->properties = $product->properties()->_orderedByPivot()->with("pivot.value")->get();
         // simple type
         $product->simple_type = ["su" => $product->simpleTypeSu()->first()];
         // variable type
-        $product->variable_type = ["variations" => $product->variableTypeVariations()->with(["variableProductTypeAttributePivots" => fn ($query) => $query->_ordered()])->get(), "attributes" => $product->variableTypeAttributePivots()->with("values")->_ordered()->get()];
+        $product->variable_type = ["variations" => $product->variableTypeVariations()->with(["variableProductTypeAttributes" => fn ($query) => $query->_orderedByPivot()])->get(), "attributes" => $product->variableTypeAttributes()->with("pivot.values")->_ordered()->get()];
         // categories tree
         $categories = Category::getTree();
+
         return view("pages.shop.products.edit-product", compact('product', "categories"));
     }
 }

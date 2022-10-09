@@ -26,11 +26,7 @@ class ProductSu extends Model
     }
     public function variableProductTypeAttributes()
     {
-        return $this->belongsToMany(AttributeValue::class, VariableProductSuAttribute::class)->withTimestamps()->withPivot(["id", "order", "attribute_id"]);
-    }
-    public function variableProductTypeAttributePivots()
-    {
-        return $this->hasMany(VariableProductSuAttribute::class, "product_su_id");
+        return $this->belongsToMany(Attribute::class, VariableProductSuAttribute::class)->withTimestamps()->withPivot(["id", "order", "attribute_value_id"]);
     }
 
     public function scopeActive($query)

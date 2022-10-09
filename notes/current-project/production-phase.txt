@@ -1,7 +1,7 @@
 cleanup database tables like expired otp,...
 do verisioning for mix
 remove test storage folders
-
+remove test in app service provider
 
 
 in public_html only put .httacess and public folder (which contains another htaccess) and put all application contents into separte folder outside of public_html

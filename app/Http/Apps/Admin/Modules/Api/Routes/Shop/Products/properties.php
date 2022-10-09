@@ -9,5 +9,4 @@ Route::prefix("/{product_id}")->group(function () {
         Route::get("/", [Controller::class, "getProperties"]);
         Route::post("/save", [Controller::class, "postSave"]);
     });
-    Route::get("/category-properties", [Controller::class, "getCategoryProperties"]);
 });

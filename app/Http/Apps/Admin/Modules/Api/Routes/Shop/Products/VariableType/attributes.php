@@ -7,8 +7,6 @@ use App\Http\Apps\Admin\Modules\Api\Controllers\Shop\Products\VariableType\Attri
 Route::prefix("/{product_id}/variable-type/attributes")->group(function () {
     Route::post("/", [Controller::class, "postAttribute"]);
     Route::post("/save", [Controller::class, "postSaveOrdering"]);
-});
-Route::prefix("/variable-type/attributes")->group(function () {
     Route::prefix("/{attribute_id}")->group(function () {
         Route::delete("/", [Controller::class, "deleteAttribute"]);
         Route::patch("/values", [Controller::class, "patchValues"]);

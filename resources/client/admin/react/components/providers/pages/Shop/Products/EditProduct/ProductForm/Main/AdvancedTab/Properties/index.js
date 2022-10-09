@@ -58,10 +58,10 @@ export default function Properties() {
                       </tr>
                     </thead>
                     <tbody>
-                      {productProperties.map((propertyValue) => (
-                        <tr key={propertyValue.id}>
-                          <td>{propertyValue.property.name}</td>
-                          <td>{propertyValue.value}</td>
+                      {productProperties.map((property) => (
+                        <tr key={property.id}>
+                          <td>{property.name}</td>
+                          <td>{property.pivot.value.value}</td>
                         </tr>
                       ))}
                     </tbody>

@@ -3,7 +3,7 @@ import { SortableHandle } from "react-sortable-hoc-rtl";
 
 const SortableDragHandle = SortableHandle(() => <span className="far fa-arrows cursor-move c-list-item-action"></span>);
 
-export default function SelectedValue({ property, value, onRemove }) {
+export default function SelectedProperty({ property, value, onRemove }) {
   return (
     <>
       <div className="d-flex align-items-center py-4" style={{ zIndex: 9999 }}>

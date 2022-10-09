@@ -203,6 +203,12 @@ Architecture
     Eloquent Relationships
     $user->cart()->save() doesn't mean user cart saves user but means user has one cart relationship saves cart
 
+    belongsToMany->attach is not same as belongsToMany->syncWithoutDetaching
+    attach create new pivot record if relation keys exists in table
+    but syncWithoutDetaching update record if exists and doesn't create new one
+
+    belongsToMany->sync if specified ids exist in pivot table, eloquent don't remove and recreate them
+
     --------------------------
 
     Eloquent Model Events

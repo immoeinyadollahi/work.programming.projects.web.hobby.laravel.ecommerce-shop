@@ -8,6 +8,11 @@ use App\Database\Models\CategoryPropertyX;
 
 class PropertiesController extends Controller
 {
+    public function getProperties($category_id)
+    {
+        $category = Category::findOrFail($category_id);
+        return ["properties" => $category->properties()->_orderedByPivot()->with(["pivot.values" => fn ($query) => $query->_orderedByPivot()])->get()];
+    }
     public function postSaveProperties($category_id)
     {
         $req = request();

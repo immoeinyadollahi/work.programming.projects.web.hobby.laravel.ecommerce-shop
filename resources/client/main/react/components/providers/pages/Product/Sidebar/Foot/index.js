@@ -1,11 +1,10 @@
 import React from "react";
-import { Tooltip, OverlayTrigger } from "react-bootstrap";
 
 import * as _String from "$utilities/string";
 import { useState } from "$hooks/core/state";
 import { useDependencyChangeEffect } from "$hooks/core/lifecycle";
 
-export default function Foot({ su, product }) {
+export default function Foot({ su }) {
   const [quantity, setQuantity] = useState(1);
   useDependencyChangeEffect(() => setQuantity(1), [su]);
   return (

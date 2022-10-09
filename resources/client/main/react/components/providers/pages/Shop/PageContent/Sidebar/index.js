@@ -13,7 +13,14 @@ const category = _getData("pageData.category");
 export default function Sidebar() {
   return (
     <BaseSidebar
-      widgets={[<CategoryHierarchyWidget key={0} />, category.brands.length ? <BrandFilterWidget brands={category.brands} key={1} /> : null, <PriceFilterWidget key={2} />, <MiscFilterWidget key={3} />, category.properties.length ? category.properties.map((property) => <PropertyFilterWidget property={property} key={`4-${property.id}`} />) : null, category.attributes.length ? category.attributes.map((attribute) => <AttributeFilterWidget attribute={attribute} key={`5-${attribute.id}`} />) : null]}
+      widgets={[
+        <CategoryHierarchyWidget key={0} />,
+        category.brands.length ? <BrandFilterWidget brands={category.brands} key={1} /> : null,
+        <PriceFilterWidget key={2} />,
+        <MiscFilterWidget key={3} />,
+        category.properties.length ? category.properties.map((property) => <PropertyFilterWidget property={property} key={`4-${property.id}`} />) : null,
+        category.attributes.length ? category.attributes.map((attribute) => <AttributeFilterWidget attribute={attribute} key={`5-${attribute.id}`} />) : null,
+      ]}
     />
   );
 }

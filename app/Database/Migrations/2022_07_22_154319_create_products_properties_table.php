@@ -12,9 +12,8 @@ return new class extends Migration
         Schema::create('products_properties', function (Blueprint $table) {
             $table->id();
             $table->_orderable();
-            // for improving queries
-            $table->integer("property_id");
-            $table->_foreignKey("property_value_id")->on("property_values")->cascadeOnDelete();
+            $table->integer("property_value_id");
+            $table->_foreignKey("property_id")->on("properties")->cascadeOnDelete();
             $table->_foreignKey("product_id")->on("products")->cascadeOnDelete();
             $table->timestamps();
         });
