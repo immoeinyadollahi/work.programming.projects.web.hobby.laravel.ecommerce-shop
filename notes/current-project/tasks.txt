@@ -239,3 +239,7 @@
     trim deep except
     has option for categories to whther or not category is brand itself,like apple category is brand too so we should't show brand widget in shop sidebar
     replace token system with uuid if possible
+
+
+implement multi locale features
+implement all available features on khazramarket shop
