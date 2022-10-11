@@ -16,9 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Utilities\Flash;
 use App\Classes\Paginate\Paginator;
-use App\Database\Models\Category;
 use App\Database\Models\DBKey;
-use App\Database\Models\Product;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AppServiceProvider extends ServiceProvider

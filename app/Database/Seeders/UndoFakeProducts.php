@@ -13,13 +13,9 @@ class UndoFakeProducts extends Seeder
     {
         $products = Product::all();
         foreach ($products as $product) {
-            // Thumbnails
-            $thumbnails = $product->thumbnails()->get();
-            foreach ($thumbnails as $thumbnail) {
-                Storage::delete($thumbnail->path);
-            }
-            // Image
+            // image
             $product->image()->_deleteFirst();
+            $product->delete();
         }
     }
 }

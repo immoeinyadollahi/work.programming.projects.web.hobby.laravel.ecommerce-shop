@@ -44,7 +44,7 @@ export default function Properties() {
         <div className="card-body">
           {category ? (
             isFetching ? (
-              <div className="d-flex justify-content-center my-5">
+              <div className="d-flex justify-content-center mb-5">
                 <span className="spinner-border"></span>
               </div>
             ) : category.properties.length ? (

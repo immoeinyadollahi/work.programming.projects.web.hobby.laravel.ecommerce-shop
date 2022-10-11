@@ -5,14 +5,14 @@ import * as attributesHttp from "$http/shop/products/variable-type/attributes";
 import { useState } from "$hooks/core/state";
 import useErrorHandler from "$hooks/common/useErrorHandler";
 
-export default function DeleteConfirmModal({ attribute, onClose, onConfirm }) {
+export default function DeleteConfirmModal({ product, attribute, onClose, onConfirm }) {
   const [isModalActive, setIsModalActive] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const { handleHttpError } = useErrorHandler();
   const handleConfirm = async () => {
     setIsDeleting(true);
     try {
-      await attributesHttp.deleteAttibute(attribute.id);
+      await attributesHttp.deleteAttibute(product.id, attribute.id);
       setIsModalActive(false);
       onConfirm();
     } catch (err) {

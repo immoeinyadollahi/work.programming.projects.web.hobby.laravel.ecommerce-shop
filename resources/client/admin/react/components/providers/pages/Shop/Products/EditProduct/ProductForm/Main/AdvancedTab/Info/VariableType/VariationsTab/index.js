@@ -14,7 +14,7 @@ import useErrorHandler from "$hooks/common/useErrorHandler";
 import Actions from "./Actions";
 import Variation from "./Variation";
 
-const SortableItem = SortableElement(({ variation, counter }) => <Variation variation={variation} counter={counter} />);
+const SortableItem = SortableElement(Variation);
 const SortableList = SortableContainer(({ variations }) => {
   return (
     <div className="mt-5">
@@ -41,7 +41,7 @@ export default function VariationsTab({ setActiveTab }) {
       stock: original.stock ?? "",
       description: original.description || "",
       has_discount: Boolean(original.discounted_price),
-      attributes: original.variable_product_type_attribute_pivots,
+      attributes: original.variable_product_type_attributes,
     };
   };
   const variationsList = useMemo(getStateVariations, []);
@@ -69,7 +69,7 @@ export default function VariationsTab({ setActiveTab }) {
                 discounted_price: null,
                 discount_expire: null,
               }),
-          attributes: variation.attributes.reduce((acc, current) => ((acc[current.attribute_id] = current.attribute_value_id), acc), {}),
+          attributes: variation.attributes.reduce((acc, current) => ((acc[current.id] = current.pivot.attribute_value_id), acc), {}),
         })),
       });
       setHasUnsavedChanges(false);
@@ -100,6 +100,7 @@ export default function VariationsTab({ setActiveTab }) {
   };
   useEffect(() => {
     if (_Global.get("shouldRefetchVariations") && data.product.variable_type.attributes.length) {
+      _Global.set("shouldRefetchVariations", false);
       fetchVariations();
     }
   }, []);

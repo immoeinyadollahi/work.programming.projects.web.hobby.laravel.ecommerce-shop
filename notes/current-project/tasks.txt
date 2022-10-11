@@ -136,23 +136,21 @@
     don't let users make orders without phone number
 	
 	replace all client select to react-select
-    complete client main category change test variations and properties and complete attributes
 	
 	product must have category to be published
 	
-	replacing setting properties with update method on model which is sames as fill and save
-	
-	Search these and fix
-	
-	1. variableProductTypeAttributePivots
-	variableTypeAttributePivots
-	2. // for improving queries
-		just like productTypeAttributes fix product properties
 
    *** NOT SURE *** convert $x->relation=$x->relation->get() to $x->load() only for multi result relations not for belongs to relations
 	
-    use compact instead of filling array in old ways
+	
+	**** for showing serialized version of model collections or one model with filtered attributes we can use 2 ways -> Model Serialization (hidden,visible)   or  API Resources
+	
+	sort attribute values in modals like size
 
+	use single qoute  all places
+	replacing setting properties with update method on model which is sames as fill and save
+    use compact instead of filling array in old ways
+	replace config images placeholders with https://via.placeholder.com instead of file
     put ->with in end of other statements
     replace all if(!xxx:find())_http_abort() to findorFail and for delete and update use deleteFirstOrFail
     make all urls map to route names

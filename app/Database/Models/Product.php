@@ -311,7 +311,7 @@ class Product extends Model
     }
     public function variableTypeAttributes()
     {
-        return $this->belongsToMany(Attribute::class, VariableProductAttribute::class)->withTimestamps()->withPivot(["id", "order"]);
+        return $this->belongsToMany(Attribute::class, VariableProductAttribute::class)->withTimestamps()->withPivot(["id"]);
     }
     public function brand()
     {
@@ -359,7 +359,7 @@ class Product extends Model
     }
     public function properties()
     {
-        return $this->belongsToMany(Property::class, ProductPropertyX::class)->withTimestamps();
+        return $this->belongsToMany(Property::class, ProductPropertyX::class)->withTimestamps()->withPivot(['id', "property_value_id"]);
     }
 
     public function scopePublished($query)

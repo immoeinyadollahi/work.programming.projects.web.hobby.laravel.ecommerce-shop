@@ -117,8 +117,8 @@ class MainController extends Controller
     public function getWishlist()
     {
         $user = _user();
-        $products = $user->favoredProducts()->select("products.*")->withSelectedSu()->orderByPivot("created_at", "desc")->with("image")->get();
-        dd($products);
+        $products = $user->favoredProducts()->select("products.*")->withSelectedSu(['conditions' => ['only_available' => false]])->orderByPivot("created_at", "desc")->with("image")->get();
+        dd($products[0]->getSelectedSu(), $products[0]->selectedSu);
         return view("pages.main.wishlist", ["products" => $products]);
     }
     public function getCompare(...$comparable_product_ids)
@@ -144,12 +144,14 @@ class MainController extends Controller
         $req = request();
         $user = _user();
         $product = Product::published()->findOrFail($product_id);
-        if (!($product->selected_su = $product->getSelectedSu())) _http_abort(404);
+        if (!($selected_su = $product->getSelectedSu())) _http_abort(404);
         if (!($product_slug && $product_slug === $product->slug)) return redirect()->_route("product", ["product_id" => $product_id, "product_slug" => $product->slug]);
         // user visit
         if (!$product->visits()->where("user_ip", $req->ip())->exists()) $product->visits()->create(["user_ip" => $req->ip()]);
         // user favourite
         if ($user) $product->is_user_favourite = $product->favoredByUsers()->where("users.id", $user->id)->exists();
+        // selected_su
+        $product->setRelation('selectedSu', $selected_su);
         // brand
         $product->brand = $product->brand()->first();
         // image
@@ -167,7 +169,7 @@ class MainController extends Controller
         // comments
         $product->comments_paginator = $product->comments()->with("user.profileImage")->where("is_verified", true)->latest()->_basePaginate(["page" => 1, "limit" => 9])->withPath("/ajax/products/$product->id/comments");
         // variable type
-        if ($product->is_variable)  $product->variable_type = ["variations" => $product->variableTypeVariations()->with(["variableProductTypeAttributes" => fn ($query) => $query->_orderedByPivot()])->active()->inStock()->_ordered()->get(), "attributes" => $product->variableTypeAttributes()->_orderedByPivot()->get()];
+        if ($product->is_variable)  $product->variable_type = ["variations" => $product->variableTypeVariations()->with(["variableProductTypeAttributes" => fn ($query) => $query->_orderedByPivot(), 'variableProductTypeAttributes.pivot.value'])->active()->inStock()->_ordered()->get(), "attributes" => $product->variableTypeAttributes()->_orderedByPivot()->get()];
         // related products
         $product->related_products = $product->main_category->products()->select("products.*")->withSelectedSu()->withUserFavouriteCheck()->where("products.id", "!=", $product->id)->orderBy("avg_rating")->limit(10)->with("image")->get();
 

@@ -13,7 +13,7 @@ import useErrorHandler from "$hooks/common/useErrorHandler";
 import Attribute from "./Attribute";
 import SaveChangesBtn from "./SaveChangesBtn";
 
-const SortableItem = SortableElement(({ attribute, counter }) => <Attribute attribute={attribute} counter={counter} />);
+const SortableItem = SortableElement(Attribute);
 const SortableList = SortableContainer(({ attributes }) => {
   return (
     <div className="mt-5">
@@ -31,14 +31,14 @@ export default function AttributesTab() {
   const categoryAttributes = data.product.main_category.attributes;
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useHasUnsavedChanges("AdvancedTab.VariableType.AttributesTab");
-  const [initialAddableAttribute, initialAttributesOrdering] = useMemo(() => [categoryAttributes.find((attribute) => !productAttributes.includes(attribute))?.id || categoryAttributes[0].id, productAttributes.map((attribute) => attribute.id)], []);
-  const [selectedAttribute, setSelectedAttribute] = useState(initialAddableAttribute);
+  const [initialSelectedAttributeId, initialAttributesOrdering] = useMemo(() => [categoryAttributes.find((categoryAttribute) => !productAttributes.some((productAttribute) => categoryAttribute.id === productAttribute.id))?.id || categoryAttributes[0].id, _.map(productAttributes, "id")], []);
+  const [selectedAttributeId, setSelectedAttributeId] = useState(initialSelectedAttributeId);
   const [attributesOrdering, setAttributesOrdering, updateAttributesOrdering] = useState(initialAttributesOrdering);
   const orderedAttributes = useMemo(() => attributesOrdering.map((attrId) => productAttributes.find((attribute) => attribute.id === attrId)).filter(Boolean), [attributesOrdering, productAttributes]);
   useDependencyChangeEffect(() => {
-    if (productAttributes.some((attribute) => attribute.id === selectedAttribute)) {
-      const nextAttribute = categoryAttributes.find((attribute) => !productAttributes.includes(attribute));
-      if (nextAttribute) setSelectedAttribute(nextAttribute.id);
+    if (productAttributes.some((attribute) => attribute.id === selectedAttributeId)) {
+      const nextAttribute = categoryAttributes.find((categoryAttribute) => !productAttributes.some((productAttribute) => categoryAttribute.id === productAttribute.id));
+      if (nextAttribute) setSelectedAttributeId(nextAttribute.id);
     }
     if (productAttributes.length > attributesOrdering.length) {
       updateAttributesOrdering((state) => state.push(_.last(productAttributes).id));
@@ -52,9 +52,9 @@ export default function AttributesTab() {
       const {
         data: { attribute },
       } = await attributesHttp.postAttribute(data.product.id, {
-        attribute_id: selectedAttribute,
+        attribute_id: selectedAttributeId,
       });
-      attribute.values = [];
+      attribute.pivot.values = [];
       setDataCallback((data) => data.product.variable_type.attributes.push(attribute));
       _Global.set("shouldRefetchVariations", true);
       setIsSubmiting(false);
@@ -91,10 +91,10 @@ export default function AttributesTab() {
             isOptionDisabled={(option) => productAttributes.some((attribute) => attribute.id === option.value)}
             isRtl={true}
             value={_.pickAs(
-              categoryAttributes.find((attribute) => attribute.id === selectedAttribute),
+              categoryAttributes.find((attribute) => attribute.id === selectedAttributeId),
               { value: "id", label: "fa" }
             )}
-            onChange={(option) => setSelectedAttribute(option.value)}
+            onChange={(option) => setSelectedAttributeId(option.value)}
           />
           <button className="btn btn-primary" onClick={handleAddAttribute} disabled={hasAllAttributes}>
             {isSubmiting ? <span className="spinner-border spinner-border-sm"></span> : " افزودن"}

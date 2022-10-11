@@ -13,19 +13,21 @@ export default function VariableType({ product }) {
   const initialSelectedAttributes = useMemo(() => variations.find((variation) => variation.id === product.selected_su.id).variable_product_type_attributes.reduce((acc, current) => ((acc[current.id] = current.pivot.attribute_value_id), acc), {}), []);
   // this is also selected attribute values not actual attributes
   const [selectedAttributes, setSelectedAttributes] = useState(initialSelectedAttributes);
-  const selectedVariation = useMemo(() => variations.find((variation) => variation.variable_product_type_attributes.every((variationAttribute) => selectedAttributes[variationAttribute.id] === variationAttribute.pivot.attribute_value_id)), [selectedAttributes]);
+  const selectedVariation = useMemo(() => variations.find((variation) => variation.variable_product_type_attributes.every((variationAttribute) => variationAttribute.pivot.attribute_value_id === selectedAttributes[variationAttribute.id])), [selectedAttributes]);
   const attributeNames = useMemo(() => !isInitializing && productAttributes.reduce((acc, current) => ((acc[current.id] = current.en), acc), {}), [isInitializing]);
   useEffect(() => {
     const previousAttributes = {};
-    const attributes = productAttributes.map((attribute, idx) => {
+    const attributes = productAttributes.map((attribute) => {
       const filteredVariations = variations.filter((variation) =>
         Object.entries(previousAttributes)
           .map((attribute) => [Number(attribute[0]), attribute[1]])
-          .every(([previousAttributeId, previousAttributeValueId]) => variation.variable_product_type_attributes.some((variationAttribute) => variationAttribute.id === previousAttributeId && variationAttribute.attribute_value_id === previousAttributeValueId))
+          .every(([previousAttributeId, previousAttributeValueId]) => variation.variable_product_type_attributes.some((variationAttribute) => variationAttribute.id === previousAttributeId && variationAttribute.pivot.attribute_value_id === previousAttributeValueId))
       );
-      const attributeValues = _.uniq(_.map(filteredVariations, `variable_product_type_attributes.${idx}.attribute_value_id`));
+      const attributeValues = _.uniqBy(
+        filteredVariations.map((variation) => variation.variable_product_type_attributes.find((variationAttribute) => variationAttribute.id === attribute.id).pivot.value),
+        "id"
+      );
       previousAttributes[attribute.id] = initialSelectedAttributes[attribute.id];
-
       return { id: attribute.id, values: attributeValues };
     });
     setAttributes(attributes);
@@ -41,10 +43,13 @@ export default function VariableType({ product }) {
       const filteredVariations = variations.filter((variation) =>
         Object.entries(previousAttributes)
           .map((attribute) => [Number(attribute[0]), attribute[1]])
-          .every(([previousAttributeId, previousAttributeValueId]) => variation.variable_product_type_attributes.some((variationAttribute) => variationAttribute.id === previousAttributeId && variationAttribute.attribute_value_id === previousAttributeValueId))
+          .every(([previousAttributeId, previousAttributeValueId]) => variation.variable_product_type_attributes.some((variationAttribute) => variationAttribute.id === previousAttributeId && variationAttribute.pivot.attribute_value_id === previousAttributeValueId))
       );
       // 2. we get current attribute values from all filtered variation
-      const attributeValues = _.uniq(_.map(filteredVariations, `variable_product_type_attributes.${idx}.attribute_value_id`));
+      const attributeValues = _.uniqBy(
+        filteredVariations.map((variation) => variation.variable_product_type_attributes.find((variationAttribute) => variationAttribute.id === attribute.id).pivot.value),
+        "id"
+      );
       // 3. add current attribute first mapped value to selectedAttributes
       previousAttributes[attribute.id] = attributeValues[0].id;
 

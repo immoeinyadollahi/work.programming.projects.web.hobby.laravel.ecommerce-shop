@@ -7,9 +7,19 @@ return [
         [
             "products" =>
             [
-                "placeholder" =>
+                "main" =>
                 [
-                    "url" => "/public/storage/placeholders/product.png",
+                    "placeholder" =>
+                    [
+                        "url" => "/public/storage/placeholders/product.png",
+                    ],
+                ],
+                "thumbnails" =>
+                [
+                    "placeholder" =>
+                    [
+                        "url" => "/public/storage/placeholders/product.png",
+                    ],
                 ]
             ],
             "categories" =>

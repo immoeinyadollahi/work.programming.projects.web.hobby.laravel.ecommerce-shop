@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { SortableHandle } from "react-sortable-hoc-rtl";
 
 import * as _Global from "$utilities/global";
@@ -19,17 +19,16 @@ export default function Attribute({ attribute, counter }) {
     _Global.set("shouldRefetchVariations", true);
   };
   const handleUpdateValues = (values) => {
-    setDataCallback((data) => (data.product.variable_type.attributes.find((attr) => attr.id === attribute.id).values = values));
+    setDataCallback((data) => (data.product.variable_type.attributes.find((attr) => attr.id === attribute.id).pivot.values = values));
     _Global.set("shouldRefetchVariations", true);
   };
-  const baseAttributeData = useMemo(() => categoryAttributes.find((attr) => attr.id === attribute.attribute_id), []);
-  const values = attribute.values;
+  const values = attribute.pivot.values;
   return (
     <>
       <div className="d-flex align-items-center p-3">
         <span className="badge badge-circle badge-secondary me-3">{counter}</span>
         <div className="d-flex align-items-center flex-grow-1">
-          <span className="me-4 fs-5">{baseAttributeData.fa}</span>
+          <span className="me-4 fs-5">{attribute.fa}</span>
           {values.length ? (
             <button className="btn btn-outline btn-outline-primary" onClick={() => setIsUpdateValuesModalActive(true)}>
               {values.length} مورد انتخاب شده
@@ -46,8 +45,8 @@ export default function Attribute({ attribute, counter }) {
           <span className="fas fa-trash text-danger c-list-item-action c-list-item-action" onClick={() => setIsDeleteConfirmModalActive(true)}></span>
         </div>
       </div>
-      {isUpdateValuesModalActive && <UpdateValuesModal onClose={() => setIsUpdateValuesModalActive(false)} onSubmit={handleUpdateValues} attribute={attribute} baseAttributeData={baseAttributeData} />}
-      {isDeleteConfirmModalActive && <DeleteConfirmModal onClose={() => setIsDeleteConfirmModalActive(false)} onConfirm={handleDeleteAttribute} attribute={attribute} />}
+      {isUpdateValuesModalActive && <UpdateValuesModal onClose={() => setIsUpdateValuesModalActive(false)} onSubmit={handleUpdateValues} product={data.product} attribute={attribute} categoryAttributes={categoryAttributes} />}
+      {isDeleteConfirmModalActive && <DeleteConfirmModal onClose={() => setIsDeleteConfirmModalActive(false)} onConfirm={handleDeleteAttribute} product={data.product} attribute={attribute} />}
     </>
   );
 }

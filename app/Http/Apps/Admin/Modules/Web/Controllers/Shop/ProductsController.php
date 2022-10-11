@@ -2,13 +2,9 @@
 
 namespace App\Http\Apps\Admin\Modules\Web\Controllers\Shop;
 
-use Illuminate\Database\Eloquent\Collection;
-
 use App\Classes\Base\Routing\Controller;
 use App\Database\Models\Category;
 use App\Database\Models\Product;
-use App\Database\Models\Attribute;
-use App\Database\Models\Brand;
 
 class ProductsController extends Controller
 {

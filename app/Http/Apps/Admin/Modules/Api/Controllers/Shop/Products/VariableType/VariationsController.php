@@ -7,7 +7,6 @@ use BenTools\CartesianProduct\CartesianProduct;
 use App\Classes\Base\Routing\Controller;
 use App\Database\Models\ProductSu;
 use App\Database\Models\Product;
-use App\Database\Models\VariableProductSuAttribute;
 use App\Exceptions\HttpException;
 
 use App\Http\Apps\Admin\Validations\Shop\Products as ProductsValidations;
@@ -79,7 +78,7 @@ class VariationsController extends Controller
         foreach ($variations as $key => $variation) {
             $su = ProductSu::find($variation["id"]);
             foreach ($variation["attributes"] as $attribute_id => $value_id) {
-                $attribute =  $su->variableTypeAttributes()->where("attributes.id", $attribute_id)->first();
+                $attribute =  $su->variableProductTypeAttributes()->wherePivot("attribute_id", $attribute_id)->first();
                 $attribute->pivot->update(['attribute_value_id' => $value_id]);
             }
             $su->update([

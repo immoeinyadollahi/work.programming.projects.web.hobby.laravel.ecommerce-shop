@@ -43,7 +43,7 @@ export default function Variation({ variation, counter }) {
           <div className="d-flex align-items-center flex-grow-1">
             <span className="badge badge-circle badge-secondary me-3">{counter}</span>
             {variation.attributes.map((attribute) => (
-              <Attribute key={attribute.id} attribute={attribute} variation={variation} categoryAttributes={data.product.main_category.attributes} updateVariation={updateVariation} />
+              <Attribute key={attribute.id} productAttributes={data.product.variable_type.attributes} categoryAttributes={data.product.main_category.attributes} attribute={attribute} variation={variation} updateVariation={updateVariation} />
             ))}
           </div>
           <div className="d-flex align-items-center">

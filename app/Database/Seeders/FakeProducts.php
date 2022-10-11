@@ -15,6 +15,7 @@ use App\Database\Factories\ProductCommentFactory;
 use App\Database\Factories\ProductSuFactory;
 use App\Database\Factories\ProductFactory;
 use App\Database\Factories\TagFactory;
+use Illuminate\Support\Facades\Log;
 
 class FakeProducts extends Seeder
 {
@@ -31,13 +32,11 @@ class FakeProducts extends Seeder
                 $product->tags()->attach($tag->id, ["order" => $key + 1]);
             }
             // Thumbnails
-            foreach (range(1, 5) as $key => $value) {
-                $thumbnail_file_name = "product-$value.jpg";
-                $thumbnail_file_path = "/shop/products/thumbnails/test/" . $thumbnail_file_name;
-                $product->thumbnails()->create(["path" => $thumbnail_file_path, "url" => Storage::url($thumbnail_file_path), "original_name" => $thumbnail_file_name, "order" => $key + 1]);
+            foreach (range(1, 5) as $order) {
+                $product->thumbnails()->create(["url" => _get_config("resources.images.products.thumbnails.placeholder.url"), "order" => $order]);
             }
             // Image
-            $product->image()->create(["is_default" => true, "url" => _get_config("resources.images.products.placeholder.url")]);
+            $product->image()->create(["is_default" => true, "url" => _get_config("resources.images.products.main.placeholder.url")]);
             // Categories
             $create_categories =  function ($category) use (&$create_categories, $product) {
                 $product->categories()->attach($category->id);
@@ -57,29 +56,26 @@ class FakeProducts extends Seeder
             }
             // Comments
             ProductCommentFactory::new()->count(38)->state(["user_id" => 1, "product_id" => $product->id])->create();
+            // Properties
+            foreach ($main_category->properties()->get()->map(fn ($property) => [$property->id, $property->pivot->values()->inRandomOrder()->first()->id]) as $key => [$property_id, $property_value_id]) {
+                $product->properties()->attach($property_id, ["order" => $key + 1, "property_value_id" => $property_value_id]);
+            }
             // Simple Type Su
             ProductSuFactory::new()->count(1)->state(["product_type" => "simple", "product_id" => $product->id])->create();
-
-            // Properties
-            foreach ($main_category->properties()->get()->map(fn ($property) => $property->pivot->values()->inRandomOrder()->first()) as $key => $property_value) {
-                $product->properties()->attach($property_value->id, ["order" => $key + 1, "property_id" => $property_value->property_id]);
-            }
             // Variable Type Attributes
             $color_attribute = Attribute::where("en", "color")->first();
             $size_attribute = Attribute::where("en", "size")->first();
-            $color_attribute_values = $color_attribute->values()->get();
-            $size_attribute_values = $size_attribute->values()->get();
+            $color_attribute_values = $color_attribute->values()->pluck("id");
+            $size_attribute_values = $size_attribute->values()->pluck("id");
 
             $product->variableTypeAttributes()->attach([$color_attribute->id => ["order" => 1], $size_attribute->id => ["order" => 2]]);
-            foreach ($product->variableTypeAttributes()->get() as $attribute) {
-                $attribute->pivot->values()->attach(collect($attribute->en === "color" ? $color_attribute_values : $size_attribute_values)->map(fn ($value) => $value->id));
-            }
-            // Variable Type Su
-            $variable_type_su = ProductSuFactory::new()->count(4)->state(["product_type" => "variable", "product_id" => $product->id])->create();
-            foreach ($variable_type_su as $key => $su) {
-                $su->order = $key + 1;
-                $su->save();
-                $su->variableProductTypeAttributes()->sync([$color_attribute_values[$key]->id => ["attribute_id" => $color_attribute->id, "order" => 1], $size_attribute_values[$key]->id => ["attribute_id" => $size_attribute->id, "order" => 2]]);
+            $product->variableTypeAttributes()->wherePivot("attribute_id", $color_attribute->id)->first()->pivot->values()->sync($color_attribute_values);
+            $product->variableTypeAttributes()->wherePivot("attribute_id", $size_attribute->id)->first()->pivot->values()->sync($size_attribute_values);
+            // Variable Type Variations
+            $variations = ProductSuFactory::new()->count(4)->state(["product_type" => "variable", "product_id" => $product->id])->create();
+            foreach ($variations as $key => $variation) {
+                $variation->update(['order' => $key + 1]);
+                $variation->variableProductTypeAttributes()->sync([$color_attribute->id => ["attribute_value_id" => $color_attribute_values[$key], "order" => 1], $size_attribute->id => ["attribute_value_id" => $size_attribute_values[$key], "order" => 2]]);
             }
         }
     }

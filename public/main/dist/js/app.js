@@ -768,10 +768,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-
 function Foot(_ref) {
-  var su = _ref.su,
-      product = _ref.product;
+  var su = _ref.su;
 
   var _useState = (0,$hooks_core_state__WEBPACK_IMPORTED_MODULE_2__.useState)(1),
       _useState2 = _slicedToArray(_useState, 2),
@@ -907,7 +905,7 @@ function VariableType(_ref) {
     return variations.find(function (variation) {
       return variation.id === product.selected_su.id;
     }).variable_product_type_attributes.reduce(function (acc, current) {
-      return acc[current.pivot.attribute_id] = current.id, acc;
+      return acc[current.id] = current.pivot.attribute_value_id, acc;
     }, {});
   }, []); // this is also selected attribute values not actual attributes
 
@@ -919,7 +917,7 @@ function VariableType(_ref) {
   var selectedVariation = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
     return variations.find(function (variation) {
       return variation.variable_product_type_attributes.every(function (variationAttribute) {
-        return selectedAttributes[variationAttribute.pivot.attribute_id] === variationAttribute.id;
+        return variationAttribute.pivot.attribute_value_id === selectedAttributes[variationAttribute.id];
       });
     });
   }, [selectedAttributes]);
@@ -940,15 +938,15 @@ function VariableType(_ref) {
               previousAttributeValueId = _ref3[1];
 
           return variation.variable_product_type_attributes.some(function (variationAttribute) {
-            return variationAttribute.pivot.attribute_id === previousAttributeId && variationAttribute.id === previousAttributeValueId;
+            return variationAttribute.id === previousAttributeId && variationAttribute.pivot.attribute_value_id === previousAttributeValueId;
           });
         });
       });
 
       var attributeValues = lodash__WEBPACK_IMPORTED_MODULE_1___default().uniqBy(filteredVariations.map(function (variation) {
         return variation.variable_product_type_attributes.find(function (variationAttribute) {
-          return variationAttribute.pivot.attribute_id === attribute.id;
-        });
+          return variationAttribute.id === attribute.id;
+        }).pivot.value;
       }), "id");
 
       previousAttributes[attribute.id] = initialSelectedAttributes[attribute.id];
@@ -985,15 +983,15 @@ function VariableType(_ref) {
               previousAttributeValueId = _ref7[1];
 
           return variation.variable_product_type_attributes.some(function (variationAttribute) {
-            return variationAttribute.pivot.attribute_id === previousAttributeId && variationAttribute.id === previousAttributeValueId;
+            return variationAttribute.id === previousAttributeId && variationAttribute.pivot.attribute_value_id === previousAttributeValueId;
           });
         });
       }); // 2. we get current attribute values from all filtered variation
 
       var attributeValues = lodash__WEBPACK_IMPORTED_MODULE_1___default().uniqBy(filteredVariations.map(function (variation) {
         return variation.variable_product_type_attributes.find(function (variationAttribute) {
-          return variationAttribute.pivot.attribute_id === attribute.id;
-        });
+          return variationAttribute.id === attribute.id;
+        }).pivot.value;
       }), "id"); // 3. add current attribute first mapped value to selectedAttributes
 
 

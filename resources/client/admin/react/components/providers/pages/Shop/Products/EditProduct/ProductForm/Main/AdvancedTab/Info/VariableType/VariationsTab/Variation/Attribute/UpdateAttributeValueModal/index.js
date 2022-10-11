@@ -4,22 +4,21 @@ import _ from "lodash";
 
 import { useState } from "$hooks/core/state";
 
-export default function UpdateAttributeValueModal({ attributeValue, attributeData, onClose, onSubmit }) {
+export default function UpdateAttributeValueModal({ attribute, availableAttributeValues, onClose, onSubmit }) {
   const [isModalActive, setIsModalActive] = useState(true);
-  const [selectedValue, setSelectedValue] = useState(attributeValue && attributeValue.id);
-  const initialValues = attributeData.values;
+  const [selectedValue, setSelectedValue] = useState(attribute.pivot.attribute_value_id);
   return (
     <Modal show={isModalActive} onHide={() => setIsModalActive(false)} onExited={onClose} centered dialogClassName="variable-product-attributes-modal">
       <Modal.Header closeButton>
         <Modal.Title>انتخاب مقدار</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {initialValues.length ? (
+        {availableAttributeValues.length ? (
           <div className="attribute-items">
-            {initialValues.map((value) => {
+            {availableAttributeValues.map((value) => {
               const isSelected = selectedValue ? selectedValue === value.id : false;
-              const onChange = (e) => setSelectedValue(value.id);
-              switch (attributeData.en) {
+              const onChange = () => setSelectedValue(value.id);
+              switch (attribute.en) {
                 case "color":
                   return (
                     <div className="attributes-color-item" key={value.id}>
@@ -50,7 +49,7 @@ export default function UpdateAttributeValueModal({ attributeValue, attributeDat
         )}
       </Modal.Body>
       <Modal.Footer>
-        {initialValues.length ? (
+        {availableAttributeValues.length ? (
           <button
             className="btn btn-primary"
             onClick={() => {

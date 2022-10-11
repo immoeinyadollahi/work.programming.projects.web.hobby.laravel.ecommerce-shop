@@ -10,7 +10,7 @@ class PropertiesController extends Controller
     public function getProperties($product_id)
     {
         $product = Product::findOrFail($product_id);
-        return ["properties" => $product->properties()->_orderedByPivot()->with("value")->get()];
+        return ["properties" => $product->properties()->_orderedByPivot()->with("pivot.value")->get()];
     }
     public function postSave($product_id)
     {

@@ -56,7 +56,7 @@ class MainController extends Controller
         // set thumbnails
         $deleted_product_thumbnails = $thumbnails ? $product->thumbnails()->whereNotIn("id", $thumbnails)->get() : $product->thumbnails()->get();
         foreach ($deleted_product_thumbnails as $thumbnail) {
-            Storage::delete($thumbnail->path);
+            $thumbnail->path && Storage::delete($thumbnail->path);
             $thumbnail->delete();
         }
         if ($thumbnails) {

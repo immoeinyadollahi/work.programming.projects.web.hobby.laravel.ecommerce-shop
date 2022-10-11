@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('product_thumbnails', function (Blueprint $table) {
             $table->id();
-            $table->string('path');
+            $table->string('path')->nullable();
             $table->string('url');
             $table->_orderable();
             $table->string('original_name')->nullable();
