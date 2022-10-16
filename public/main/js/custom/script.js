@@ -1,9 +1,21 @@
-// Utilities
-const _DOM = {
-  setScrollLock(isLocked) {
-    Object.assign(document.body.style, isLocked ? { overflow: "hidden", paddingRight: "17px" } : { overflow: "", paddingRight: "" });
+const _Redux = {
+  construct() {
+    $(() => {
+      this.store = __GLOBAL__.get("redux.store");
+    });
+    return this;
   },
-};
+  toggleLoader(loaderState) {
+    const storeState = this.store.getState();
+    this.store.dispatch({
+      type: "data/updateData",
+      payload: {
+        ...storeState.data,
+        loaderStateChange: { state: loaderState },
+      },
+    });
+  },
+}.construct();
 
 if ($(".js-coupon-form").length) {
   window.couponCtrl = {
@@ -77,13 +89,19 @@ if ($(".js-coupon-form").length) {
     },
     setLoading(isLoading) {
       if (isLoading) {
-        this.button.html(`<span class="spinner-border spinner-border-sm" style="color:white;"></span>`);
+        this.button.html(
+          `<span class="spinner-border spinner-border-sm" style="color:white;"></span>`
+        );
       } else {
         this.button.text("اعمال کد تخفیف");
       }
     },
     setMessage(message, level) {
-      this.messageWrap.removeClass("text-danger text-success").addClass(`text-${level}`).text(message).show();
+      this.messageWrap
+        .removeClass("text-danger text-success")
+        .addClass(`text-${level}`)
+        .text(message)
+        .show();
     },
     hideMessage() {
       this.messageWrap.hide().removeClass("text-danger text-success").empty();
@@ -123,29 +141,6 @@ if ($(".js-alert-container").length) {
     },
   }.construct();
 }
-if ($(".js-page-loader").length) {
-  window.loaderCtrl = {
-    construct() {
-      const loader = $(".js-page-loader");
-      this.loader = loader;
-      loader.on("transitionend", (e) => {
-        if (e.target === e.currentTarget) {
-          loader.hasClass("active") || (loader.hide() && _DOM.setScrollLock(false));
-        }
-      });
-      return this;
-    },
-    setLoading(isLoading) {
-      if (isLoading) {
-        _DOM.setScrollLock(isLoading);
-        this.loader.show();
-        setTimeout(() => this.loader.addClass("active"), 0);
-      } else {
-        this.loader.removeClass("active");
-      }
-    },
-  }.construct();
-}
 // Alert Container
 {
   const alertContainer = $(".js-alert-container");
@@ -168,7 +163,7 @@ if ($(".js-page-loader").length) {
     if (e.originalEvent.isTrusted) return;
     const input = $(e.currentTarget);
     const item = input.closest("[data-cart-item-id]");
-    loaderCtrl.setLoading(true);
+    _Redux.toggleLoader(true);
     errorCtrl.clearErrors();
     $.ajax({
       method: "POST",
@@ -179,10 +174,10 @@ if ($(".js-page-loader").length) {
         item.replaceWith(newEl);
         newEl.find(".js-quantity-input").parent().customNumber();
         $(".js-cart-info").replaceWith(data.info_html);
-        loaderCtrl.setLoading(false);
+        _Redux.toggleLoader(false);
       },
       error: async (xhr, status, err) => {
-        loaderCtrl.setLoading(false);
+        _Redux.toggleLoader(false);
         errorCtrl.handleErrors(xhr);
       },
     });
@@ -206,10 +201,19 @@ if ($(".js-page-loader").length) {
     const handleWrapperScroll = (e) => {
       if (resultsWrap.innerHeight() + resultsWrap.scrollTop() > resultsWrap.prop("scrollHeight")) {
         resultsWrap.off("scroll", handleWrapperScroll);
-        const loader = $(`<div class="d-flex justify-content-center mt-4"><span class="spinner-border spinner-border-sm"></span></div>`).appendTo(resultsWrap);
+        const loader = $(
+          `<div class="d-flex justify-content-center mt-4"><span class="spinner-border spinner-border-sm"></span></div>`
+        ).appendTo(resultsWrap);
         $.ajax({
           url: "/ajax/products/compare",
-          data: { q: currentData.query, page: currentData.next_page, ...__DATA.pageData.products.reduce((acc, current, idx) => ((acc[`comparable_products[${idx}]`] = current), acc), {}) },
+          data: {
+            q: currentData.query,
+            page: currentData.next_page,
+            ...__DATA.pageData.products.reduce(
+              (acc, current, idx) => ((acc[`comparable_products[${idx}]`] = current), acc),
+              {}
+            ),
+          },
           success(data, status, xhr) {
             resultsWrap.children(".row").append(initItems($(data.html)));
             currentData = data.data;
@@ -270,7 +274,13 @@ if ($(".js-page-loader").length) {
       }
     });
     function setIsSearching(state) {
-      button.prop("disabled", state).html(state ? ` <span class="spinner-border spinner-border-sm"></span>` : `<span class="fas fa-search"></span>`);
+      button
+        .prop("disabled", state)
+        .html(
+          state
+            ? ` <span class="spinner-border spinner-border-sm"></span>`
+            : `<span class="fas fa-search"></span>`
+        );
     }
   }
   // Comparable Products
@@ -331,7 +341,9 @@ if ($(".js-page-loader").length) {
       success(data, status, xhr) {
         $(".js-address-form select[name=city]").html(`
                     <option hidden selected value="">انتخاب کنید</option>
-                    ${data.map((city) => `<option value="${city.id}">${city.name}</option>`).join("")}
+                    ${data
+                      .map((city) => `<option value="${city.id}">${city.name}</option>`)
+                      .join("")}
                 `);
       },
       error: async (xhr, status, err) => {
@@ -363,18 +375,21 @@ if ($(".js-page-loader").length) {
   $(".js-otp-resend-btn")
     .find("[data-resend-countdown]")
     .each(function () {
-      $(this).countdown(new Date().getTime() + parseInt($(this).attr("data-resend-countdown")) * 1000, function (e) {
-        $(this)
-          .html(e.strftime(`%M:%S`))
-          .on("finish.countdown", () =>
-            $(this)
-              .parent()
-              .prop("disabled", false)
-              .text("ارسال مجدد")
-              .on("click", (e) => {
-                location.pathname = "/profile/phone/resend-otp";
-              })
-          );
-      });
+      $(this).countdown(
+        new Date().getTime() + parseInt($(this).attr("data-resend-countdown")) * 1000,
+        function (e) {
+          $(this)
+            .html(e.strftime(`%M:%S`))
+            .on("finish.countdown", () =>
+              $(this)
+                .parent()
+                .prop("disabled", false)
+                .text("ارسال مجدد")
+                .on("click", (e) => {
+                  location.pathname = "/profile/phone/resend-otp";
+                })
+            );
+        }
+      );
     });
 }

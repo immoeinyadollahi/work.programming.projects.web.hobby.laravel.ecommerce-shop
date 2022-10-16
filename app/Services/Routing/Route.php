@@ -12,17 +12,13 @@ use App\Http\Middlewares\Middleware;
 
 class Route extends IlluminateRoute
 {
-    private function mergeMiddlewares($middleware)
-    {
-        $this->action["data"]["middlewares"] ??= [];
-        $middleware_id = Str::uuid()->toString();
-        $this->action["data"]["middlewares"][$middleware_id] = $middleware;
-        $this->middleware(Middleware::with(["middleware_id" => $middleware_id]));
-    }
     public function middlewares(...$middlewares)
     {
         foreach ($middlewares as $middleware) {
             $has_closure = false;
+            if (is_string($middleware)) {
+                return $this->middleware($middleware);
+            }
             if (is_callable($middleware)) {
                 if ($middleware instanceof Closure) ($middleware = serialize(new SerializableClosure($middleware))) && ($has_closure = true);
                 $middleware = ["handler" => $middleware, "has_closure" => $has_closure];
@@ -41,5 +37,13 @@ class Route extends IlluminateRoute
             $this->mergeMiddlewares($middleware);
         }
         return $this;
+    }
+
+    private function mergeMiddlewares($middleware)
+    {
+        $this->action["data"]["middlewares"] ??= [];
+        $middleware_id = Str::uuid()->toString();
+        $this->action["data"]["middlewares"][$middleware_id] = $middleware;
+        $this->middleware(Middleware::with(["middleware_id" => $middleware_id]));
     }
 }

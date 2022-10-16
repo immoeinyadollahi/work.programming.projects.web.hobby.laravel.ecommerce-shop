@@ -12,6 +12,7 @@ class FakeCategoriesProperties extends Seeder
     {
         $category = Category::where("en", "shirts")->first();
         $property_group = PropertyGroup::first();
+        $category->update(["property_group_id" => $property_group->id]);
         foreach ($property_group->properties()->get() as $key => $property) {
             $category->properties()->attach($property->id, ["order" => $key + 1]);
         }

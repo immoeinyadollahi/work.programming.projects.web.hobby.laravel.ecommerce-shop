@@ -2,20 +2,15 @@
 
 namespace App\Database\Seeders;
 
-use Illuminate\Support\Facades\Storage;
-
 use App\Classes\Base\Database\Seeder;
 use App\Database\Models\Category;
 use App\Database\Models\Attribute;
 use App\Database\Models\Brand;
 use App\Database\Models\Product;
-use App\Database\Factories\ProductSpecificationGroupFactory;
-use App\Database\Factories\ProductSpecificationGroupItemFactory;
 use App\Database\Factories\ProductCommentFactory;
 use App\Database\Factories\ProductSuFactory;
 use App\Database\Factories\ProductFactory;
 use App\Database\Factories\TagFactory;
-use Illuminate\Support\Facades\Log;
 
 class FakeProducts extends Seeder
 {
@@ -43,23 +38,14 @@ class FakeProducts extends Seeder
                 $category->parent_id && $create_categories($category->parent()->first());
             };
             $create_categories($main_category);
-            // Specification Groups
-            $specification_groups = ProductSpecificationGroupFactory::new()->count(8)->state(["product_id" => $product->id])->make();
-            foreach ($specification_groups as $key => $group) {
-                $group->order = $key + 1;
-                $group->save();
-                $group_items = ProductSpecificationGroupItemFactory::new()->count(10)->state(["group_id" => $group->id])->make();
-                foreach ($group_items as $key => $item) {
-                    $item->order = $key + 1;
-                    $item->save();
-                }
-            }
             // Comments
             ProductCommentFactory::new()->count(38)->state(["user_id" => 1, "product_id" => $product->id])->create();
             // Properties
             foreach ($main_category->properties()->get()->map(fn ($property) => [$property->id, $property->pivot->values()->inRandomOrder()->first()->id]) as $key => [$property_id, $property_value_id]) {
                 $product->properties()->attach($property_id, ["order" => $key + 1, "property_value_id" => $property_value_id]);
             }
+            // specifications
+
             // Simple Type Su
             ProductSuFactory::new()->count(1)->state(["product_type" => "simple", "product_id" => $product->id])->create();
             // Variable Type Attributes

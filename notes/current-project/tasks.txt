@@ -144,9 +144,16 @@
 	
 	
 	**** for showing serialized version of model collections or one model with filtered attributes we can use 2 ways -> Model Serialization (hidden,visible)   or  API Resources
-	
-	sort attribute values in modals like size
+	**** we can rename PropertyGroup to PropertyType and use PropertyGroup for Property and use PropertyGroupValue for PropertyValue same for Specifications
 
+    review factories to shortest way
+
+    fix _ordered in belongs to many relation because it may conflict with other table columns instead of relation table
+    even in other relations that contains joins this problem can happend
+	
+    continue fake product add specs and fix fake categories specs ->_ordered query to fixed on
+
+	use dependency injection for request,request user (custom injection binding (laravel doc))
 	use single qoute  all places
 	replacing setting properties with update method on model which is sames as fill and save
     use compact instead of filling array in old ways
@@ -243,3 +250,7 @@
 
 implement multi locale features
 implement all available features on khazramarket shop
+
+
+in products compare specs order are based on spec group ordering
+but in product page is based on product specific ordering

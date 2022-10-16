@@ -4,11 +4,11 @@ namespace App\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-use App\Database\Models\ProductSpecificationGroup;
+use App\Database\Models\Specification;
 
-class ProductSpecificationGroupFactory extends Factory
+class SpecificationFactory extends Factory
 {
-    protected $model = ProductSpecificationGroup::class;
+    protected $model = Specification::class;
 
     public function definition()
     {

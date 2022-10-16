@@ -20,6 +20,8 @@ return new class extends Migration
             // category order between other categories in same parent
             $table->_orderable('sibling_order');
             $table->_foreignKey("parent_id")->on("categories")->cascadeOnDelete();
+            $table->_foreignKey("property_group_id")->on("property_groups")->nullOnDelete();
+            $table->_foreignKey("specification_group_id")->on("specification_groups")->nullOnDelete();
             $table->timestamps();
         });
     }

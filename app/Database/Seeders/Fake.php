@@ -12,10 +12,11 @@ class Fake extends Seeder
             FakeUser::class,
             FakeAttributeValues::class,
             FakeProperties::class,
+            FakeSpecificationGroup::class,
             FakeCategoriesProperties::class,
+            FakeCategoriesSpecifications::class,
             FakeCategoriesAttributes::class,
             FakeCategoriesBrands::class,
-            FakeComparableCategories::class,
             FakeProducts::class,
         ]);
     }

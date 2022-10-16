@@ -1,5 +1,0 @@
-public function mainCategory()
-{
-// access other side of belongsToMany relation but only get single filtered result not a collection
-return $this->hasOneThrough(Category::class, ProductCategoryX::class, "product_id", "id", "id", "category_id")->where("products_categories.is_main_category", true);
-}

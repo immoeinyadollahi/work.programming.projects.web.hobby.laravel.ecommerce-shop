@@ -21,7 +21,7 @@ Route::middlewares(Auth::middleware("web"))->group(function () {
     Route::post("/profile/phone/verify", [Controller::class, "postProfilePhoneVerify"]);
 });
 Route::get("/", [Controller::class, "getIndex"]);
-Route::get("/compare/{comparable_product_1?}/{comparable_product_2?}/{comparable_product_3?}/{comparable_product_4?}", [Controller::class, "getCompare"])->name("compare");
+Route::get("/compare/{product_1}/{product_2?}/{product_3?}/{product_4?}", [Controller::class, "getCompare"])->name("compare");
 Route::get("/product/{product_id}/{product_slug?}", [Controller::class, "getProduct"])->name("product");
 Route::get("/post/{post_id}/{post_slug?}", [Controller::class, "getPost"])->name("post");
 Route::get("/shop/{category_slug}", [Controller::class, "getShop"])->name("shop");

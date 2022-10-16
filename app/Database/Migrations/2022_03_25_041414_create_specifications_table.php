@@ -9,16 +9,16 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('product_specification_groups', function (Blueprint $table) {
+        Schema::create('specifications', function (Blueprint $table) {
             $table->id();
             $table->string("name");
             $table->_orderable();
-            $table->_foreignKey("product_id")->on("products")->cascadeOnDelete();
+            $table->_foreignKey("group_id")->on("specification_groups")->cascadeOnDelete();
             $table->timestamps();
         });
     }
     public function down()
     {
-        Schema::dropIfExists('product_specification_groups');
+        Schema::dropIfExists('specifications');
     }
 };

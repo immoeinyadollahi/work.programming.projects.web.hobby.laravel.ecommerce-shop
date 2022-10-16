@@ -10,14 +10,6 @@ class CategoryPropertyX extends Pivot
 
     public function values()
     {
-        return $this->belongsToMany(PropertyValue::class, CategoryPropertyXValue::class, "category_property_id")->withTimestamps();
-    }
-    public function category()
-    {
-        return $this->belongsTo(Category::class, "category_id");
-    }
-    public function property()
-    {
-        return $this->belongsTo(Property::class, "property_id");
+        return $this->belongsToMany(PropertyValue::class, CategoryPropertyXValueX::class, "category_property_id")->withTimestamps();
     }
 }

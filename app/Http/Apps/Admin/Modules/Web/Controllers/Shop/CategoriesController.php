@@ -43,8 +43,7 @@ class CategoriesController extends Controller
         $image_id = $req->input("image");
         $parent_id = $req->input("parent");
         $parent_category = $parent_id ? Category::find($parent_id) : null;
-        $category->fill(array_merge($req->only("en", "fa", "description"), ["slug" => Str::slug($req->input("en")), "level" => $parent_category ? $parent_category->level + 1 : 0]));
-        $category->save();
+        $category->update(array_merge($req->only("en", "fa", "description"), ["slug" => Str::slug($req->input("en")), "level" => $parent_category ? $parent_category->level + 1 : 0]));
         $category_image = $category->image()->first();
         if ($image_id) {
             if ($category_image) {

@@ -121,21 +121,12 @@ class MainController extends Controller
         dd($products[0]->getSelectedSu(), $products[0]->selectedSu);
         return view("pages.main.wishlist", ["products" => $products]);
     }
-    public function getCompare(...$comparable_product_ids)
+    public function getCompare($main_product_id, ...$other_product_ids)
     {
-        if (!count($comparable_product_ids)) _http_abort(404);
-        $comparable_products = Product::select("products.*")->withSelectedSu()->whereIn("products.id", $comparable_product_ids)->with("mainCategory.comparableCategories", "properties", "image")->get();
-        if (count($comparable_products) !== count($comparable_product_ids)) _http_abort(404);
+        $comparable_products = Product::select("products.*")->withSelectedSu()->whereIn("products.id", array_merge([$main_product_id], $other_product_ids))->with(["mainCategory.specifications" => fn ($query) => $query->_ordered(), "mainCategory.specifications.pivot.items" => fn ($query) => $query->_ordered(), "image"])->get();
+        if (count($comparable_products) !== (1 + count($other_product_ids)) || $comparable_products->unique("mainCategory.specification_group_id")->count() > 1) _http_abort(404);
 
-        if (count($comparable_products) > 1) {
-            foreach ($comparable_products as $key => $product) {
-                foreach ($comparable_products->except($key) as $comparable) {
-                    if (!$product->mainCategory->comparableCategories->some(fn ($category) => $category->id === $comparable->mainCategory->id)) _http_abort(404);
-                }
-            }
-        }
 
-        $comparable_properties = $comparable_products->pluck("mainCategory")->flatMap(fn ($category) => $category->properties()->where("properties.is_comparable", true)->get())->unique("id");
 
         return view("pages.main.compare", compact('comparable_products', 'comparable_properties'));
     }

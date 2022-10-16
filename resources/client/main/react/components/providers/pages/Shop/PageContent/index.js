@@ -19,7 +19,14 @@ export default function PageContent() {
   const [paginator, setPaginator] = useState(productsPaginator);
   const { toggleLoader } = useLoader();
   const { handleHttpError } = useErrorHandler();
-  const { query, queryChange, hasQueryState, setSearchQuery, toggleSearchQuery, getQuerySearchParams } = useQuery({
+  const {
+    query,
+    queryChange,
+    hasQueryState,
+    setSearchQuery,
+    toggleSearchQuery,
+    getQuerySearchParams,
+  } = useQuery({
     defaultQuery: { limit: 18, page: 1 },
   });
   useDependencyChangeEffect(async () => {
@@ -36,9 +43,11 @@ export default function PageContent() {
       });
     }
   }, [queryChange]);
-  console.log(category)
+
   return (
-    <ProductsSearchContext.Provider value={{ query, setSearchQuery, toggleSearchQuery, hasQueryState }}>
+    <ProductsSearchContext.Provider
+      value={{ query, setSearchQuery, toggleSearchQuery, hasQueryState }}
+    >
       <div className="shop-layout shop-layout--sidebar--start">
         <Sidebar />
         <div className="shop-layout__content">
@@ -46,16 +55,26 @@ export default function PageContent() {
             {paginator.total_items_count ? (
               <div className="products-view">
                 <Topbar paginator={paginator} />
-                <div className="products-view__list products-list" data-layout="grid-3-sidebar" data-with-features="false">
+                <div
+                  className="products-view__list products-list"
+                  data-layout="grid-3-sidebar"
+                  data-with-features="false"
+                >
                   <div className="products-list__body">
                     {paginator.items.map((product) => (
-                      <ProductCard key={product.id} product={product} />
+                      <div className="products-list__item" key={product.id}>
+                        <ProductCard product={product} />
+                      </div>
                     ))}
                   </div>
                 </div>
                 {paginator.has_pages && (
                   <div className="products-view__pagination d-flex justify-content-center">
-                    <Pagination count={paginator.total_pages} page={query.page} onChange={(e, page) => setSearchQuery({ page })} />
+                    <Pagination
+                      count={paginator.total_pages}
+                      page={query.page}
+                      onChange={(e, page) => setSearchQuery({ page })}
+                    />
                   </div>
                 )}
               </div>

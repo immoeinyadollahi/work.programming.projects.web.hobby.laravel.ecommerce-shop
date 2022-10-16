@@ -51,4 +51,8 @@ class Category extends Model
     {
         return $this->belongsToMany(Property::class, CategoryPropertyX::class)->withTimestamps()->withPivot("id");
     }
+    public function specifications()
+    {
+        return $this->belongsToMany(Specification::class, CategorySpecificationX::class)->withTimestamps()->withPivot("id");
+    }
 }

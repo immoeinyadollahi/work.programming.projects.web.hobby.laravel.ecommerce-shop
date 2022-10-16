@@ -687,11 +687,7 @@ $user_pages = [
         <!-- site__footer / end -->
     </div>
     <!-- site / end -->
-    <div class="page-loader js-page-loader">
-        <div class="loader-inner">
-            <div class="spinner-border"></div>
-        </div>
-    </div>
+    <div data-component="loader"></div>
     <!-- js -->
     <script src="/public/main/vendor/jquery-3.3.1/jquery.min.js"></script>
     <script src="/public/main/vendor/bootstrap-4.2.1/js/bootstrap.bundle.min.js"></script>
@@ -718,7 +714,7 @@ $user_pages = [
                     data: {},
                 }
             },
-            dependencies: []
+            dependencies: ["layouts.master"]
         };
     </script>
     @yield('page-scripts')

@@ -1,5 +1,6 @@
 <?php
 
+use Faker\Generator as FakerGenerator;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -202,5 +203,14 @@ if (!function_exists("_trim_array")) {
             }
         }
         return $input;
+    }
+}
+if (!function_exists("_faker")) {
+    /**
+     * @return FakerGenerator
+     */
+    function _faker()
+    {
+        return app(FakerGenerator::class);
     }
 }

@@ -12,17 +12,13 @@ use App\Http\Middlewares\Middleware;
 
 class RouteRegistrar extends IlluminateRouteRegistrar
 {
-    private function mergeMiddlewares($middleware)
-    {
-        $this->attributes["data"]["middlewares"] ??= [];
-        $middleware_id = Str::uuid()->toString();
-        $this->attributes["data"]["middlewares"][$middleware_id] = $middleware;
-        $this->middleware(array_merge($this->attributes["middleware"] ?? [], [Middleware::with(["middleware_id" => $middleware_id])]));
-    }
     public function middlewares(...$middlewares)
     {
         foreach ($middlewares as $middleware) {
             $has_closure = false;
+            if (is_string($middleware)) {
+                return $this->middleware(array_merge($this->attributes["middleware"] ?? [], [$middleware]));
+            }
             if (is_callable($middleware)) {
                 if ($middleware instanceof Closure) ($middleware = serialize(new SerializableClosure($middleware))) && ($has_closure = true);
                 $middleware = ["handler" => $middleware, "has_closure" => $has_closure];
@@ -42,12 +38,6 @@ class RouteRegistrar extends IlluminateRouteRegistrar
         }
         return $this;
     }
-    public function require(...$paths)
-    {
-        return $this->middlewares(function () use ($paths) {
-            foreach ($paths as $path) require $path;
-        });
-    }
     public function bootstrap($path)
     {
         return $this->require($path);
@@ -57,6 +47,20 @@ class RouteRegistrar extends IlluminateRouteRegistrar
         $this->group(function () use ($callback) {
             $callback();
             _register_fallback_route();
+        });
+    }
+
+    private function mergeMiddlewares($middleware)
+    {
+        $this->attributes["data"]["middlewares"] ??= [];
+        $middleware_id = Str::uuid()->toString();
+        $this->attributes["data"]["middlewares"][$middleware_id] = $middleware;
+        $this->middleware(array_merge($this->attributes["middleware"] ?? [], [Middleware::with(["middleware_id" => $middleware_id])]));
+    }
+    private function require(...$paths)
+    {
+        return $this->middlewares(function () use ($paths) {
+            foreach ($paths as $path) require $path;
         });
     }
 }

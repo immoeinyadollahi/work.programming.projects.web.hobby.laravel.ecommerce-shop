@@ -333,10 +333,6 @@ class Product extends Model
     {
         return $this->hasMany(ProductThumbnail::class, "product_id");
     }
-    public function specificationGroups()
-    {
-        return $this->hasMany(ProductSpecificationGroup::class, "product_id");
-    }
     public function categories()
     {
         return $this->belongsToMany(Category::class, ProductCategoryX::class)->withTimestamps();
@@ -360,6 +356,10 @@ class Product extends Model
     public function properties()
     {
         return $this->belongsToMany(Property::class, ProductPropertyX::class)->withTimestamps()->withPivot(['id', "property_value_id"]);
+    }
+    public function specifications()
+    {
+        return $this->belongsToMany(Specification::class, ProductSpecificationX::class)->withTimestamps()->withPivot(['id']);
     }
 
     public function scopePublished($query)

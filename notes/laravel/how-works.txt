@@ -235,7 +235,7 @@ Architecture
     timestamp and model event are parts of eloquent ORM not database interface
     --------------------------
     Eloquent Pivot
-    by default only timestamps and foreign keys in pivot will be selected from query,for other columns, they must be explicitly selected
+    by default only timestamps (if using withTimestamps method) and foreign keys in pivot will be selected from query,for other columns, they must be explicitly selected
     --------------------------
     Array & JSON Conversion Of Model Object
     model attributes are object by default

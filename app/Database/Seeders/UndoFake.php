@@ -12,9 +12,9 @@ class UndoFake extends Seeder
     {
         $this->call([
             UndoFakeProducts::class,
-            UndoFakeComparableCategories::class,
             UndoFakeCategoriesBrands::class,
             UndoFakeCategoriesAttributes::class,
+            UndoFakeSpecificationGroup::class,
             UndoFakeProperties::class,
             UndoFakeAttributeValues::class,
             UndoFakeUser::class,

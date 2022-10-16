@@ -81,63 +81,6 @@
                         <div class="card-body">
                             <h3 class="card-title">سفارش شما</h3>
                             @include('shared::partials.checkout-info', ['cart' => $_cart])
-                            <div class="payment-methods">
-                                <ul class="payment-methods__list">
-                                    <li class="payment-methods__item payment-methods__item--active">
-                                        <label class="payment-methods__item-header"><span
-                                                class="payment-methods__item-radio input-radio"><span
-                                                    class="input-radio__body"><input class="input-radio__input"
-                                                        name="checkout_payment_method" type="radio" checked> <span
-                                                        class="input-radio__circle"></span> </span>
-                                            </span><span class="payment-methods__item-title">فیش بانکی</span></label>
-                                        <div class="payment-methods__item-container">
-                                            <div class="payment-methods__item-description text-muted">لورم ایپسوم متن ساختگی
-                                                با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
-                                                چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای
-                                                شرایط فعلی</div>
-                                        </div>
-                                    </li>
-                                    <li class="payment-methods__item">
-                                        <label class="payment-methods__item-header"><span
-                                                class="payment-methods__item-radio input-radio"><span
-                                                    class="input-radio__body"><input class="input-radio__input"
-                                                        name="checkout_payment_method" type="radio"> <span
-                                                        class="input-radio__circle"></span> </span>
-                                            </span><span class="payment-methods__item-title">پرداخت با چک</span></label>
-                                        <div class="payment-methods__item-container">
-                                            <div class="payment-methods__item-description text-muted">لورم ایپسوم متن ساختگی
-                                                با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
-                                                چاپگرها</div>
-                                        </div>
-                                    </li>
-                                    <li class="payment-methods__item">
-                                        <label class="payment-methods__item-header"><span
-                                                class="payment-methods__item-radio input-radio"><span
-                                                    class="input-radio__body"><input class="input-radio__input"
-                                                        name="checkout_payment_method" type="radio"> <span
-                                                        class="input-radio__circle"></span> </span>
-                                            </span><span class="payment-methods__item-title">پرداخت در محل</span></label>
-                                        <div class="payment-methods__item-container">
-                                            <div class="payment-methods__item-description text-muted">لورم ایپسوم متن
-                                                ساختگی
-                                                با تولید</div>
-                                        </div>
-                                    </li>
-                                    <li class="payment-methods__item">
-                                        <label class="payment-methods__item-header"><span
-                                                class="payment-methods__item-radio input-radio"><span
-                                                    class="input-radio__body"><input class="input-radio__input"
-                                                        name="checkout_payment_method" type="radio"> <span
-                                                        class="input-radio__circle"></span> </span>
-                                            </span><span class="payment-methods__item-title">پرداخت آنلاین</span></label>
-                                        <div class="payment-methods__item-container">
-                                            <div class="payment-methods__item-description text-muted">لورم ایپسوم متن
-                                                ساختگی
-                                                با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک</div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
                             <button class="btn btn-primary btn-xl btn-block">پرداخت</button>
                         </div>
                     </form>

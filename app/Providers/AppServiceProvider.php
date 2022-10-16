@@ -8,7 +8,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\View\View;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\DB;
 
 use App\Utilities\Flash;
 use App\Classes\Paginate\Paginator;
+use App\Database\Factories\SpecificationFactory;
+use App\Database\Models\Category;
 use App\Database\Models\DBKey;
+use App\Database\Models\SpecificationGroup;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AppServiceProvider extends ServiceProvider
@@ -87,21 +90,21 @@ class AppServiceProvider extends ServiceProvider
             $keys = explode(".", $this->name());
             return $keys[count($keys) - 1];
         });
-        // Eloquent
-        QueryBuilder::macro("_deleteFirst", function () {
+        // Eloquent Builder
+        EloquentBuilder::macro("_deleteFirst", function () {
             return $this->limit(1)->delete();
         });
-        QueryBuilder::macro("_updateFirst", function ($values) {
+        EloquentBuilder::macro("_updateFirst", function ($values) {
             return $this->limit(1)->update($values);
         });
-        QueryBuilder::macro("_ordered", function ($direction = "asc") {
-            return $this->orderBy($this->model::class::$orderable ?? "order", $direction);
+        EloquentBuilder::macro("_ordered", function ($direction = "asc", $table = null) {
+            return $this->orderBy(($table ?: $this->model->getTable()) . "." . ($this->model::class::$orderable ?? "order"), $direction);
         });
-        QueryBuilder::macro("_basePaginate", function ($options = [], $columns = ['*']) {
+        EloquentBuilder::macro("_basePaginate", function ($options = [], $columns = ['*']) {
             extract(array_merge(["page" => null, "limit" => 9], $options));
             return $this->paginate($limit, $columns, "page", $page);
         });
-        QueryBuilder::macro("_paginate", function ($options = [], $columns = ['*']) {
+        EloquentBuilder::macro("_paginate", function ($options = [], $columns = ['*']) {
             $total = $this->toBase()->getCountForPagination();
             $paginator = new Paginator($total, $options);
             if ($total) {
@@ -109,7 +112,7 @@ class AppServiceProvider extends ServiceProvider
             }
             return $paginator;
         });
-        // BelongsToMany Relation
+        // Eloquent BelongsToMany Relation
         BelongsToMany::macro("_orderedByPivot", function ($direction = "asc") {
             return $this->orderByPivot($this->getPivotClass()::$orderable ?? "order", $direction);
         });
