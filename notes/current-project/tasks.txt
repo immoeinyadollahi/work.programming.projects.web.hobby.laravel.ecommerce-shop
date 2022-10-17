@@ -148,10 +148,8 @@
 
     review factories to shortest way
 
-    fix _ordered in belongs to many relation because it may conflict with other table columns instead of relation table
-    even in other relations that contains joins this problem can happend
 	
-    continue fake product add specs and fix fake categories specs ->_ordered query to fixed on
+    continue fake product add specs
 
 	use dependency injection for request,request user (custom injection binding (laravel doc))
 	use single qoute  all places
@@ -247,7 +245,7 @@
     has option for categories to whther or not category is brand itself,like apple category is brand too so we should't show brand widget in shop sidebar
     replace token system with uuid if possible
 
-
+separate db connecions into dev and prod
 implement multi locale features
 implement all available features on khazramarket shop
 

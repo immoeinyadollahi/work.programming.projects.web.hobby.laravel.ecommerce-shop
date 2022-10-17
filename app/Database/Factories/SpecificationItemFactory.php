@@ -12,11 +12,8 @@ class SpecificationItemFactory extends Factory
 
     public function definition()
     {
-        $value_type = $this->faker->randomElement(["text", "boolean"]);
         return [
-            "name" => $this->faker->name(),
-            "value" => $value_type === "boolean" ? $this->faker->boolean() : $this->faker->words(3, true),
-            "value_type" => $value_type
+            "name" => $this->faker->name()
         ];
     }
 }

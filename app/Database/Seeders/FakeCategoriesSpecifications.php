@@ -10,6 +10,7 @@ class FakeCategoriesSpecifications extends Seeder
 {
     public function run()
     {
+        $faker = _faker();
         $category = Category::where("en", "shirts")->first();
         $specification_group = SpecificationGroup::first();
         $category->update(["specification_group_id" => $specification_group->id]);
@@ -18,7 +19,12 @@ class FakeCategoriesSpecifications extends Seeder
         }
         foreach ($category->specifications()->get() as $specification) {
             foreach ($specification->items()->inRandomOrder()->limit(rand(1, 10))->get() as $key => $item) {
-                $specification->pivot->items()->attach($item->id, ["order" => $key + 1]);
+                $item_value_type = $faker->randomElement(["text", "boolean"]);
+                $specification->pivot->items()->attach($item->id, [
+                    "order" => $key + 1,
+                    "default_value" => $item_value_type === "boolean" ? $faker->boolean() : $faker->words(3, true),
+                    "default_value_type" => $item_value_type
+                ]);
             }
         }
     }

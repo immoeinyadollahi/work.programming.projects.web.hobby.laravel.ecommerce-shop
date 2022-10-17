@@ -126,7 +126,7 @@ return [
     |
     */
 
-    'cookie' => env('SESSION_COOKIE', "asd"),
+    'cookie' => env('SESSION_COOKIE'),
 
     /*
     |--------------------------------------------------------------------------

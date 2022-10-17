@@ -45,7 +45,13 @@ class FakeProducts extends Seeder
                 $product->properties()->attach($property_id, ["order" => $key + 1, "property_value_id" => $property_value_id]);
             }
             // specifications
-
+            foreach ($main_category->specifications()->_ordered()->get() as $key => $specification) {
+                $product->specifications()->attach($specification->id, ["order" => $key + 1]);
+                $product_specification = $product->specifications()->wherePivot("specification_id", $specification->id)->first();
+                foreach ($specification->pivot->items()->_ordered()->get() as $key => $item) {
+                    $product_specification->pivot->items()->attach($item->id, ["order" => $key + 1, 'value' => $item->pivot->default_value, 'value_type' => $item->default_value_type]);
+                }
+            }
             // Simple Type Su
             ProductSuFactory::new()->count(1)->state(["product_type" => "simple", "product_id" => $product->id])->create();
             // Variable Type Attributes

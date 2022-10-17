@@ -123,7 +123,7 @@ class MainController extends Controller
     }
     public function getCompare($main_product_id, ...$other_product_ids)
     {
-        $comparable_products = Product::select("products.*")->withSelectedSu()->whereIn("products.id", array_merge([$main_product_id], $other_product_ids))->with(["mainCategory.specifications" => fn ($query) => $query->_ordered(), "mainCategory.specifications.pivot.items" => fn ($query) => $query->_ordered(), "image"])->get();
+        $comparable_products = Product::select("products.*")->withSelectedSu()->whereIn("products.id", array_merge([$main_product_id], $other_product_ids))->with(["mainCategory", "image"])->get();
         if (count($comparable_products) !== (1 + count($other_product_ids)) || $comparable_products->unique("mainCategory.specification_group_id")->count() > 1) _http_abort(404);
 
 
